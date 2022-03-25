@@ -7,8 +7,8 @@ lectures and recitations. Since it is classified as a co-requiste with 6.006, ba
 programming.[^2] To get most out of this material, the reader should either have taken an introductory Python course or had experience in other languages.
 
 ## Access
-As of now(2022/3/26), the material is available at [here](https://py.mit.edu/spring22). As this is not published under MIT OCW Project, not all contents on the website is 
-accessible to general public. Lectures, for example are not available. Also, it seems that the administrator will shut down access to a semaster's site after the 
+As of now(2022/3/26), the material is available at [here](https://py.mit.edu/spring22). Since this is not published under MIT OCW Project, not all contents on the website is 
+open to general public. Lectures, for example are not available. Also, it seems that the administrator will shut down access to a semaster's site after the 
 semaster ends. To make this educational material useful even after this semaster ends, I downloaded and included those pages I deem necessary to follow through the lab 
 sessions. \
 \
