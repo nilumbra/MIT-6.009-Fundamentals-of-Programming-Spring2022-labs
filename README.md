@@ -2,7 +2,7 @@
 
 ## What is 6.009
 According to [MIT EECS's roadmaps for freshman](https://www.eecs.mit.edu/docs/ug/freshman_roadmaps.pdf), 6.009 Programming is one of the three **foundation subjects**[^1]
-for those majoring in Computer Science and Engineering. It is claimed to be a pure programming class, though many common algorithms are used explicitly or implicitly in
+for those majoring in Computer Science and Engineering. It is claimed to be a pure programming class, though various algorithmic techniques are used throughtout the course both in
 lectures and recitations. Since it is classified as a co-requiste with 6.006, background in algorithms is not expected. However, this is not a introductory class in computer
 programming.[^2] To get most out of this material, the reader should either have taken an introductory Python course or had experience in other languages.
 
