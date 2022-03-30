@@ -1,0 +1,52 @@
+[
+  [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], [], [], [], [], []],
+  [["wall"], [], [], [], ["wall"], [], [], [], [], []],
+  [
+    ["wall"],
+    [],
+    [],
+    [],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"]
+  ],
+  [
+    ["wall"],
+    ["computer"],
+    ["computer"],
+    ["computer"],
+    ["computer"],
+    [],
+    ["computer"],
+    [],
+    ["player"],
+    ["wall"]
+  ],
+  [
+    ["wall"],
+    ["target"],
+    ["target"],
+    ["target"],
+    ["target"],
+    ["target"],
+    [],
+    [],
+    [],
+    ["wall"]
+  ],
+  [
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"]
+  ]
+]

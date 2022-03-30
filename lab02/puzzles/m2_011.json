@@ -1,0 +1,8 @@
+[
+  [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]],
+  [["wall"], ["target"], ["wall"], [], [], ["wall"]],
+  [["wall"], ["player"], ["computer"], ["computer"], [], ["wall"]],
+  [["wall"], ["target"], ["target"], ["computer"], [], ["wall"]],
+  [["wall"], ["wall"], [], [], [], ["wall"]],
+  [[], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]]
+]
