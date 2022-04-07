@@ -52,6 +52,157 @@ def compare_simulation(filename):
         assert original_game == game, "be careful not to modify the input game!"
         assert lab.victory_check(game) == exp_win, f"Incorrect victory check in step {ix} for the following board (expected {exp_win}):\n\n{original_dump}\n\nYou can copy/paste this representation into the GUI to test."
 
+def test_isMovable():
+    level = [
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]],
+   [["wall"], [], [], [], [], ["wall"]],
+   [["wall"], [],  ["computer"],  ["computer"], [], ["wall"]],
+   [["wall"], [], [], ["target", "player"], [], ["wall"]],
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]]
+]
+
+    game = lab.new_game(level)
+
+    ## test bounds check work properly
+    assert not lab.isMovable(game, (1, 0)) # (3, 3) + (1, 0) = (4, 3), which is a wall
+    game["player"] = (3, 4)
+    assert not lab.isMovable(game, (0, 1)) # (3, 4) + (0, 1) = (3, 5), which is a wall
+    game["player"] = (1, 1)
+    assert not lab.isMovable(game, (0, -1)) # (1, 1) + (0, -1) = (1, 0), which is a wall
+
+    ## test up-movable
+    assert not lab.isMovable(game, (-1, 0))
+    ## test down-movable
+    game["player"] = (1, 3)
+    assert lab.isMovable(game, (1, 0))
+
+    ## test consecutive computers are right unmovable 
+    game["player"] = (2, 1)
+    assert not lab.isMovable(game, (0, 1))
+
+    ## test consecutive computers are left unmovable 
+    game["player"] = (2, 4)
+    assert not lab.isMovable(game, (0, -1))
+
+    ## test move into additional walls is illegal
+    game["walls"].add((1, 1))
+    game["player"] = (2, 1)
+    assert not lab.isMovable(game, (-1, 0))
+
+    level = [
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]],
+   [["wall"], [], [], [], [], ["wall"]],
+   [["wall"], [],  [],  ["player"], [], ["wall"]],
+   [["wall"], [], [], ["target", "computer"], [], ["wall"]],
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]]
+]   
+    game = lab.new_game(level)
+
+    ## test left-movable
+    assert lab.isMovable(game, (0, -1))
+
+    ## test right-movable
+    assert lab.isMovable(game, (0, 1))
+
+    ## test move into computer-wall is illegal
+    assert not lab.isMovable(game, (11, 0))
+
+
+def test_moveup():
+    level = [
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]],
+   [["wall"], [], [], [], [], ["wall"]],
+   [["wall"], [],  ["computer"],  ["computer"], [], ["wall"]],
+   [["wall"], [], [], ["target", "player"], [], ["wall"]],
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]]
+]
+    
+    exp_up = [
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]],
+   [["wall"], [], [], ["computer",], [], ["wall"]],
+   [["wall"], [],  ["computer"],  ["player"], [], ["wall"]],
+   [["wall"], [], [], ["target", ], [], ["wall"]],
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]]
+]
+
+    game = lab.new_game(level)
+    assert lab.dump_game(lab.move(game, (-1, 0))) == exp_up
+    assert lab.dump_game(lab.move(game, (-1, 0))) == exp_up # unmoved because of there is wall in the way
+
+def test_movedown():
+    level = [
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]],
+   [["wall"], [], ["player"], [], [], ["wall"]],
+   [["wall"], [],  ["computer"],  ["computer", ], [], ["wall"]],
+   [["wall"], [], [], ["target", ], [], ["wall"]],
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]]
+]
+    
+    exp_down = [
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]],
+   [["wall"], [], [], [], [], ["wall"]],
+   [["wall"], [],  ["player"],  ["computer"], [], ["wall"]],
+   [["wall"], [], ["computer"], ["target", ], [], ["wall"]],
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]]
+]
+    
+
+    game = lab.new_game(level)
+    assert lab.dump_game(lab.move(game, (1, 0))) == exp_down
+    assert lab.dump_game(lab.move(game, (1, 0))) == exp_down # unmoved because of there is wall in the way
+
+def test_moveright():
+    level = [
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]],
+   [["wall"], [], ["player"], ["computer"], [], ["wall"]],
+   [["wall"], [],  ["computer"],  [], [], ["wall"]],
+   [["wall"], [], [], ["target", ], [], ["wall"]],
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]]
+]
+
+    exp_right = [
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]],
+   [["wall"], [], [], ["player"], ["computer"], ["wall"]],
+   [["wall"], [],  ["computer"],  [], [], ["wall"]],
+   [["wall"], [], [], ["target", ], [], ["wall"]],
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]]
+]
+    
+
+    game = lab.new_game(level)
+    assert lab.dump_game(lab.move(game, (0, 1))) == exp_right
+    assert lab.dump_game(lab.move(game, (0, 1))) == exp_right # unmoved because of there is wall in the way
+
+def test_moveleft():
+    level = [
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]],
+   [["wall"], [], [], ["computer", ], ["player"], ["wall"]],
+   [["wall"], [],  ["computer"],  [], [], ["wall"]],
+   [["wall"], [], [], ["target", ], [], ["wall"]],
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]]
+]
+    
+    exp_left = [
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]],
+   [["wall"], [], ["computer"], ["player"], [], ["wall"]],
+   [["wall"], [],  ["computer"],  [], [], ["wall"]],
+   [["wall"], [], [], ["target", ], [], ["wall"]],
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]]
+]
+    exp_left2 = [
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]],
+   [["wall"], ["computer"], ["player"], [], [], ["wall"]],
+   [["wall"], [],  ["computer"],  [], [], ["wall"]],
+   [["wall"], [], [], ["target", ], [], ["wall"]],
+   [["wall"], ["wall"], ["wall"], ["wall"], ["wall"], ["wall"]]
+]
+    
+
+    game = lab.new_game(level)
+    assert lab.dump_game(lab.move(game, (0, -1))) == exp_left
+    assert lab.dump_game(lab.move(lab.move(game, (0, -1)),(0, -1))) == exp_left2
+    assert lab.dump_game(lab.move(lab.move(lab.move(game, (0, -1)),(0, -1)), (0, -1))) == exp_left2 # unmoved because of there is wall in the way
+
 unit_test_cases = [
     i.rsplit(".", 1)[0]
     for i in sorted(os.listdir(os.path.join(TEST_DIRECTORY, "test_levels")))
