@@ -19,5 +19,19 @@ Other pages the reader may find useful are listed as follows: in corresponding l
 ## My use of this material
 To be completed...
 
+## Progress 
+- [x] Lab 1 Image processing
+- [x] Lab 2 Snekoban 
+- [ ] Lab 3 bacon number
+- [ ] Lab 4 frugal maps
+- [ ] Lab 5 minesweeper
+- [ ] Lab 6 SAT solver
+- [ ] Lab 7 autocorrect
+- [ ] Lab 8 symbolic algebra
+- [ ] Lab 9 LISP I
+- [ ] Lab 10 LISP II
+- [ ] Lab' downloader
+- [ ] Lab' snek is you 
+- [ ] 
 [^1]: The other two are 6.004 Computation Structures and the famous 6.006 Algorithms.
 [^2]: That will be 6.0001 and 6.0002, available on [ocw.mit.edu](ocw.mit.edu).
