@@ -1,0 +1,109 @@
+<html>
+<head>
+<title>File Downloader</title>
+</head>
+<body>
+<style>
+body {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#contents {
+    width: 100%;
+    background-color: #eee;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 100px;
+    text-align: center;
+}
+
+pre {
+    background-color: #fff;
+}
+</style>
+
+<center>
+Download URL:<br/>
+<input id="url" type="text" style="width: 100%;" value="http://hz.mit.edu/009_lab6/bird.jpg"/><br/>
+&nbsp;<br/>
+Time Between Frames (ms) for animations: <input id="timing" value="100" /><br/>
+&nbsp;<br/>
+<button id="download_go">Go</button>
+</center>
+
+<div id="contents">
+Files will show up here as they are downloaded.
+</div>
+
+<script type="text/javascript">
+async function myFetch(loc, body){
+  try{
+    const response = await fetch(loc, {
+      method: 'POST',
+      cache: 'no-cache',
+      redirect: 'follow',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    if (response.ok) {
+      return await response.json();
+    } else {
+      return {error: await response.text()};
+    }
+  }catch(e){
+    return {error: await 'Could not communicate with the server.  Is it running?'}
+  }
+}
+
+document.getElementById("download_go").onclick = function(){
+    var url = document.getElementById("url").value;
+    myFetch("/new_request", {url: url}).then(function(response){
+        if (!response.ok){
+            alert(JSON.stringify(response));
+        }else{
+            var res_div = document.getElementById("contents");
+            var sequence = response.sequence;
+            var type = response.type;
+            if (type == "text/plain"){
+                var newbody = document.createElement("pre");
+                var image = false;
+            }else{
+                var newbody = document.createElement("img");
+                var image = true;
+            }
+            newbody.id = "response";
+            res_div.innerHTML = newbody.outerHTML;
+            getFile(sequence, image);
+        }
+    });
+};
+
+function getFile(sequence, image){
+    myFetch("/next_file").then(function(response){
+        if (response.ok){
+            if (image){
+                document.getElementById("response").src = response.data
+            }else{
+                document.getElementById("response").textContent = response.data
+                console.log(response.data);
+            }
+            if (sequence){
+                try{
+                    var delay = parseInt(document.getElementById("timing").value);
+                }catch(e){
+                    var delay = 100;
+                }
+                setTimeout(function(){getFile(sequence, image)}, delay);
+            }
+        }
+    });
+}
+
+</script>
+
+</body>
+</html>

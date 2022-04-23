@@ -1,0 +1,38 @@
+[
+  {
+    "ok": true,
+    "output": 28
+  },
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": true,
+    "output": 38
+  },
+  {
+    "ok": true,
+    "output": 28
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": true,
+    "output": 2
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": true,
+    "output": 28
+  },
+  {
+    "ok": true,
+    "output": 2
+  }
+]

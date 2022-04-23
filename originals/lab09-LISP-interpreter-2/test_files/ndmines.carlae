@@ -1,0 +1,264 @@
+# n-d minesweeper implemented in Carlae :)
+
+# example code to run:
+# (:= game (new-game-nd (list 2 4) (list (list 0 0) (list 1 0) (list 1 1))))
+# (game-get-board game)
+# (dig-nd game (list 0 1))
+# (dig-nd game (list 0 3))
+# (game-get-mask game)
+# (game-get-state game)
+
+(begin
+  # State is represented as follow: 0 => 'ongoing', 1 => 'victory', 2 => 'defeat'
+  # Game board uses -1 to indicate that a bomb is present. Non-negative counts represent non-bomb squares.
+  # Mask uses @t and @f to represent whether a square is revealed or hidden respectively.
+
+  # Equivalent to Python's `range` builtin.
+  (:= (range start stop)
+    (if (>= start stop)
+      nil
+      (pair start (range (+ start 1) stop))
+    )
+  )
+
+  # Equivalent to Python's `all` builtin that takes in a list.
+  (:= (all values)
+    (if (=? (length values) 0)
+      @t
+      (and (head values) (all (tail values)))
+    )
+  )
+
+  # Equivalent to Python's `min` builtin for two arguments.
+  (:= (min a b)
+    (if (< a b)
+      a
+      b
+    )
+  )
+
+  # Equivalent to Python's `max` builtin for two arguments.
+  (:= (max a b)
+    (if (> a b)
+      a
+      b
+    )
+  )
+
+  # Equivalent to Python's `zip` builtin for two linked lists.
+  (:= (zip a b)
+    (if (or (=? (length a) 0) (=? (length b) 0))
+      nil
+      (pair
+        (pair (head a) (head b))
+        (zip (tail a) (tail b))
+      )
+    )
+  )
+
+  # Sets the element at a given index in a linked list.
+  (:= (set-nth ll index value)
+    (if (=? index 0)
+      (pair value (tail ll))
+      (pair (head ll) (set-nth (tail ll) (- index 1) value))
+    )
+  )
+
+  # Creates an nd-array of the specified dimensions filled with an initial value.
+  (:= (initialize-nd dimensions value)
+    (if (=? (length dimensions) 0)
+      # Base case.
+      value
+
+      # Recursive case. Make multiple smaller nd-arrays.
+      (map (function (_)
+        (initialize-nd
+          (tail dimensions)
+          value
+        )
+      ) (range 0 (head dimensions)))
+    )
+  )
+
+  # Returns a list of all neighboring coordinates.
+  (:= (neighbors-nd dimensions coordinates)
+    (if (=? (length dimensions) 0)
+      # Base case.
+      (list (list))
+
+      # Recursive case. Use a recursive call to generate the suffix. Map each suffix to a list of of valid neighbors.
+      # Use reduce to flatten all neighbors.
+      (reduce
+        concat
+        (map
+          (function (suffix)
+            (map
+              (function (prefix) (concat (list prefix) suffix))
+              (range (max 0 (- (head coordinates) 1)) (min (head dimensions) (+ (head coordinates) 2)))
+            )
+          )
+          (neighbors-nd (tail dimensions) (tail coordinates))
+        )
+        (list)
+      )
+    )
+  )
+
+  # Gets the value in an nd-array at the specified coordinate.
+  (:= (get-nd board coordinates)
+    (if (=? (length coordinates) 1)
+      # Base case.
+      (nth board (head coordinates))
+
+      # Recursive case. Go to the correct board with one less dimension than the current board.
+      (get-nd (nth board (head coordinates)) (tail coordinates))
+    )
+  )
+
+  # Sets the value in an nd-array at the specified coordinate. Returns a possibly new linked list.
+  (:= (set-nd board coordinates value)
+    (if (=? (length coordinates) 1)
+      # Base case.
+      (set-nth board (head coordinates) value)
+
+      # Recursive case. Go to the correct board with one less dimension than the current board.
+      (set-nth
+        board
+        (head coordinates)
+        (set-nd (nth board (head coordinates)) (tail coordinates) value)
+      )
+    )
+  )
+
+  # Checks if the victory condition has been met.
+  (:= (is-victory board mask dimensions)
+    (if (=? (length dimensions) 0)
+      # Base case. Every non-bomb square must be revealed.
+      (or mask (=? board -1))
+
+      # Recursive case. All smaller dimensions must be in a victory state.
+      (all (map
+        (function (pair)
+          (is-victory (head pair) (tail pair) (tail dimensions))
+        )
+        (zip board mask)
+      ))
+    )
+  )
+
+  # All get/set helpers for the game.
+  (:= (game-get-state game) ((nth game 0)))
+  (:= (game-set-state game state) ((nth game 1) state))
+  (:= (game-get-board game) ((nth game 2)))
+  (:= (game-set-board game board) ((nth game 3) board))
+  (:= (game-get-mask game) ((nth game 4)))
+  (:= (game-set-mask game mask) ((nth game 5) mask))
+  (:= (game-get-dimensions game) ((nth game 6)))
+
+  # Starts a new game and returns an instance (as a function list) with appropriate getter and setter methods.
+  (:= (new-game-nd dimensions bombs)
+    (begin
+      # Set up instance variables.
+      (:= state 0)
+      (:= board (initialize-nd dimensions 0))
+      (:= mask (initialize-nd dimensions @f))
+
+      # Set up instance methods.
+      (:= self (list
+        # Get state.
+        (function () state)
+        # Set state.
+        (function (new_state) (set! state new_state))
+        # Get board.
+        (function () board)
+        # Set board.
+        (function (new_board) (set! board new_board))
+        # Get mask.
+        (function () mask)
+        # Set mask.
+        (function (new_mask) (set! mask new_mask))
+        # Get dimensions.
+        (function () dimensions)
+      ))
+
+      # Go through each bomb to place it and increment the neighbors.
+      (map (function (bomb)
+        (begin
+          (game-set-board self (set-nd (game-get-board self) bomb -1))
+          (map (function (neighbor)
+            (begin
+              (:= value (get-nd (game-get-board self) neighbor))
+              (if (>= value 0)
+                (game-set-board self (set-nd (game-get-board self) neighbor (+ value 1)))
+                nil
+              )
+            )
+          ) (neighbors-nd dimensions bomb))
+        )
+      ) bombs)
+
+      # Return the list of methods which can be used to access and mutate the instance.
+      self
+    )
+  )
+
+  # Recursively digs up the square at coordinates and neighboring squares. Returns the number of squares dug.
+  (:= (dig-nd game coordinates)
+    # Check the game state and mask before digging.
+    (if (or (get-nd (game-get-mask game) coordinates) (not (=? (game-get-state game) 0)))
+      # Do nothing because either the square is already revealed or the game is not ongoing.
+      0
+
+      # Check if we dug a bomb.
+      (if (=? (get-nd (game-get-board game) coordinates) -1)
+        # We dug a bomb. Reveal the square and update the game state.
+        (begin
+          (game-set-mask game (set-nd (game-get-mask game) coordinates @t))
+          (game-set-state game 2)
+          1
+        )
+
+        # We dug a non-bomb square.
+        (begin
+          # Define a helper function to do the recursive digging.
+          (:= (dig-helper coordinates)
+            # Check if the square was already dug.
+            (if (get-nd (game-get-mask game) coordinates)
+              # Already dug square.
+              0
+
+              # Not already dug. Reveal and recursively dig if necessary.
+              (begin
+                (game-set-mask game (set-nd (game-get-mask game) coordinates @t))
+                (if (=? (get-nd (game-get-board game) coordinates) 0)
+                  # Get the sum of all recursive digs.
+                  (reduce +
+                    (map
+                      (function (neighbor) (dig-helper neighbor))
+                      (neighbors-nd (game-get-dimensions game) coordinates)
+                    )
+                  1)
+
+                  # No neighbors to dig.
+                  1
+                )
+              )
+            )
+          )
+
+          # Get the total number of squares dug.
+          (:= count (dig-helper coordinates))
+
+          # Check for victory condition and update the game state if necessary.
+          (if (is-victory (game-get-board game) (game-get-mask game) (game-get-dimensions game))
+            (game-set-state game 1)
+            nil
+          )
+
+          # Return the total squares dug.
+          count
+        )
+      )
+    )
+  )
+)

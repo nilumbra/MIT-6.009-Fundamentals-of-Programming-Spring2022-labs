@@ -1,0 +1,22 @@
+[
+  {
+    "ok": true,
+    "output": 1
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": true,
+    "output": 1
+  },
+  {
+    "ok": true,
+    "output": 0
+  },
+  {
+    "ok": true,
+    "output": 1
+  }
+]

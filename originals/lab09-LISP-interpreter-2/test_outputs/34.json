@@ -1,0 +1,26 @@
+[
+  {
+    "ok": true,
+    "output": 0
+  },
+  {
+    "ok": true,
+    "output": 1
+  },
+  {
+    "ok": false,
+    "type": "CarlaeEvaluationError"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeEvaluationError"
+  },
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": true,
+    "output": 7
+  }
+]

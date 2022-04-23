@@ -1,0 +1,6 @@
+(nth (list 9 8 7) 2)
+(nth (list 1) 20)
+(nth (list 2 3 4 5 9 10) 0)
+(nth (list) 0)
+(nth (pair 1 2) 0)
+(nth (pair 1 2) 1)

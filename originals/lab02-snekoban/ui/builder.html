@@ -1,0 +1,644 @@
+<html>
+<head>
+<title>Snekoban Level Builder</title>
+</head>
+<body>
+<style>
+image,img {
+  -ms-interpolation-mode: nearest-neighbor;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+}
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+body {
+  background-color: #333;
+  color: white;
+  display: grid;
+
+  grid-template-areas: "game other";
+  grid-template-rows: 100%;
+  grid-template-columns: 1fr 20%;
+  column-gap: 50px;
+}
+#other {
+  max-width: 500px;
+  grid-area: other;
+  margin-top: 20px;
+  margin-right: 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+#header {
+  /*grid-area: header;*/
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+#header > img {
+  flex: 0 1;
+}
+#controls {
+  text-align: center;
+}
+#status {
+  grid-area: status;
+  padding: 0px 1em;
+  overflow: auto;
+  max-height: 50vh;
+}
+#output {
+  grid-area: game;
+  position: relative;
+  margin-top: 20px;
+}
+#objectArea {
+  position: relative;
+  margin-top: 20px;
+}
+#output > svg {
+  position: absolute;
+  border: 10px black;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+#selectedObject {
+  max-width: 150px;
+}
+#objectArea > svg {
+  position: absolute;
+  border: 10px black;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+#objectArea {
+  width: 100%;
+  height: 400px;
+  /* height: 100%; */
+}
+#gridOptions div {
+  margin-top: 10px;
+}
+#downloadButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+#gridOptions input {
+  font-size: 20px;
+}
+#gridOptions button {
+  width: 100%;
+  padding: 5px;
+  margin-right: 3px;
+  margin-left: 3px;
+}
+#levelText {
+  width: 90%;
+  height: 100px;
+}
+</style>
+<div id="other">
+  <div id="header">
+    <img src="6009.gif" width=100>
+    <img src="text_LAB.gif" width=100>
+    <img src="text_TWO.gif" width=100>
+  </div>
+  <!-- <div style="visibility: hidden;" id="levelselect">
+  base level select: <select id="levels"></select><br/> -->
+  <div id="gridOptions">
+    <div>
+      rows:
+      <input type="number" min="1" max="30" step="1" value="7" id="rowSel" />
+    </div>
+    <div>
+      columns:
+      <input type="number" min="1" max="30" step="1" value="7" id="colSel" />
+    </div>
+    <br/>
+    <div>Save level:</div>
+    <div id="textOrFileContainer">
+      Save File
+      <input type="checkbox" id="saveFile" checked />
+      Generate text
+      <input type="checkbox" id="genText" />
+    </div>
+    <textarea id="levelText" readonly></textarea>
+    <div id="downloadButtons">
+      <a id="download" style="display: none"></a>
+      <button id="downloadJSON" title="download current level using canonical representation">JSON</button>
+      <button id="downloadTXT" title="download current level using ASCII representation">TXT</button>
+    </div>
+    <div id="status"></div>
+    <div>
+      <button onclick="location.href='/';"  id="play" title="play Snekoban">Back to Game</button>
+    </div>
+    <div>
+      <button id="clear" title="clear the current level">Clear (q)</button>
+    </div>
+  </div>
+
+
+  <p>
+    Click an object below (or press the corresponding key) to select it, then click on the board (or use arrow keys and Enter) to place it.
+  </p>
+  <p>
+    To clear spots on the board: select `eraser` below or hold alt/option when you click (or press Backspace/Delete on a spot) 
+  </p>
+
+  <div id="selectedObject">
+    eraser
+    <input type="checkbox" id="clearSpot" />
+    <br/>
+    Selected Object:
+  </div>
+
+  <div id="objectArea"></div>
+</div>
+<div id="output"></div>
+
+<script type="text/javascript">
+BOARD = null;
+var currentRender = 0, currentSvg, currentRect, lastGrid, lastImages;
+var currentGrid = null;
+var charMap;
+var currentHoverRect, currentHoverRow, currentHoverCol, selectedObjectName, currentClickEvent;
+
+const IMAGE_SIZE= 50;
+
+function getSelectedIndex(_x, _y) {
+  const pt = currentSvg.createSVGPoint();
+  pt.x = _x;
+  pt.y = _y;
+  let {x, y} = pt.matrixTransform(currentSvg.getScreenCTM().inverse());  
+  return {c: Math.floor(x / IMAGE_SIZE), r: Math.floor(y / IMAGE_SIZE)};
+}
+
+function hoverHighlight(r, c) {
+  if (!r) r = 0;
+  if (!c) c = 0;
+  if (r < 0 || c < 0 || !currentGrid || r >= currentGrid.length || c >= currentGrid[0].length) return;
+  if (currentHoverRect) {
+    currentHoverRect.remove();
+  }
+  currentHoverRow = r;
+  currentHoverCol = c;
+  x = c * IMAGE_SIZE;
+  y = r * IMAGE_SIZE;
+
+
+  const {x: rectX, y: rectY} = currentRect.getBoundingClientRect();
+  currentHoverRect = document.createElementNS(SVGNS, 'rect');
+  currentHoverRect.setAttribute('fill', 'none');
+  currentHoverRect.setAttribute('stroke', 'white');
+  currentHoverRect.setAttribute('x', x);
+  currentHoverRect.setAttribute('y', y);
+  currentHoverRect.setAttribute('width', IMAGE_SIZE);
+  currentHoverRect.setAttribute('height', IMAGE_SIZE);
+  currentSvg.appendChild(currentHoverRect);
+}
+
+function placeObject(r, c, remove) {
+  if (
+    (!currentGrid || !selectedObjectName && !remove) ||
+    (r < 0 || c < 0 || r >= currentGrid.length || c >= currentGrid[0].length) 
+  ) return;
+
+  x = c * IMAGE_SIZE;
+  y = r * IMAGE_SIZE;
+
+
+  if (remove) {
+    currentGrid[r][c] = [];
+  }
+  else {
+    currentGrid[r][c].push(selectedObjectName);
+  }
+  render(currentGrid);
+}
+
+function render(grid){
+  status(undefined);
+  const thisRender = ++currentRender;
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(SVGNS, 'svg');
+  const rect = document.createElementNS(SVGNS, 'rect');
+  rect.setAttribute('fill', 'black');
+  svg.appendChild(rect);
+
+  var width = 0, height = grid.length;
+  var images = {};  // mapping from r,c string to array of images rendered there
+  var redrawn = []; // list of r,c pairs that need to be redrawn / cleared
+  var promises = []; // list of promises for images loading
+
+  for (let r = 0; r < grid.length; r++) {
+    const row = grid[r];
+    width = Math.max(width, row.length);
+    for (let c = 0; c < row.length; c++) {
+      const cell = row[c];
+      const here = [r, c];
+      redrawn.push(here);
+      for (let obj of cell) {
+        const image = document.createElementNS(SVGNS, 'image');
+        image.setAttribute('x', c * IMAGE_SIZE);
+        image.setAttribute('y', r * IMAGE_SIZE);
+        image.setAttribute('width', IMAGE_SIZE);
+        image.setAttribute('height', IMAGE_SIZE);
+        // To avoid assuming case-sensitivity of the file system,
+        // we prefix uppercase strings with "text_".
+        obj = getFilename(obj);
+        promises.push(new Promise((done) => {
+          image.onload = image.onerror = done;
+          image.setAttribute('href', obj);
+        }));
+        if (!images[here]) images[here] = [];
+        images[here].push(image);
+        svg.appendChild(image);
+      }
+    }
+  }
+  // Safari requires SVG to be in document DOM for onload to trigger
+  svg.style.display = 'none';
+  document.body.appendChild(svg);
+  // Use new images only after loading all images,
+  // and only if this is still the current render.
+  Promise.all(promises).then(() => {
+    if (thisRender !== currentRender) return;
+    const output = document.getElementById('output');
+    if (currentSvg) {
+      // Clear old images at each redrawn location
+      if (lastImages) {
+        redrawn.forEach((location) => {
+          if (lastImages[location])
+            lastImages[location].forEach((image) => image.remove());
+        });
+      }
+      // Bring new images into visible svg
+      Object.values(images).forEach((imageList) => {
+        imageList.forEach((image) => {
+          currentSvg.appendChild(image);
+        });
+      });
+    } else {
+      // Display first SVG
+      currentSvg = svg;
+      currentRect = rect;
+      //output.innerHTML = '';
+      svg.style.display = 'block';
+      output.appendChild(svg);
+    }
+    lastGrid = grid;
+    lastImages = images;
+    currentRect.setAttribute('width', width * IMAGE_SIZE);
+    currentRect.setAttribute('height', height * IMAGE_SIZE);
+    currentSvg.setAttribute('viewBox', `0 0 ${width * IMAGE_SIZE} ${height * IMAGE_SIZE}`);
+
+    currentSvg.addEventListener('mousemove', (event) => {
+      const {r, c} = getSelectedIndex(event.offsetX, event.offsetY);
+      hoverHighlight(r, c);
+      currentSvg.style.cursor = 'pointer';
+    });
+
+    currentSvg.addEventListener('mouseexit', (event) => {
+      currentHoverRect.remove();
+    });
+
+    currentSvg.addEventListener('click', (event) => {
+      const myEvent = {
+        x: event.offsetX, 
+        y: event.offsetY, 
+        remove: event.altKey || document.getElementById('clearSpot').checked,
+        obj: selectedObjectName,
+      };
+      // prevent duplicate clicks
+      if (
+        currentClickEvent && 
+        Object.entries(myEvent).reduce((soFar, [key, val]) => soFar && val === currentClickEvent[key], true)
+      ) return;
+      currentClickEvent = myEvent;
+      const {r, c} = getSelectedIndex(myEvent.x, myEvent.y);
+      placeObject(r, c, myEvent.remove);
+    });
+  });
+}
+
+document.getElementById('other').addEventListener('mousemove', (event) => {
+  if (currentHoverRect) currentHoverRect.remove()
+});
+
+const rowSel = document.getElementById('rowSel');
+const colSel = document.getElementById('colSel');
+
+function updateGridSize() {
+  const rows = parseInt(rowSel.value);
+  const cols = parseInt(colSel.value);
+  if (!currentGrid) {
+    currentGrid = [...Array(rows)].map(_ => [...Array(cols)].map(_ => []));
+  }
+  else {
+    if (rows < currentGrid.length) {
+      currentGrid = currentGrid.slice(0, rows);
+    }
+    else if (rows > currentGrid.length) {
+      while (currentGrid.length < rows) {
+        currentGrid.push([...Array(cols)].map(_ => []));
+      }
+    }
+    else if (cols < currentGrid[0].length) {
+      currentGrid = currentGrid.map(row => row.slice(0, cols));
+    }
+    else if (cols > currentGrid[0].length) {
+      currentGrid.forEach(row => {
+        while (row.length < cols) {
+          row.push([]);
+        }
+      })
+    }
+  }
+  render(currentGrid);
+}
+updateGridSize();
+
+function clearLevel() {
+  currentGrid = null; 
+  updateGridSize();
+  status(undefined);
+}
+
+document.getElementById('clear').addEventListener('click', clearLevel);
+
+rowSel.addEventListener('input', updateGridSize);
+colSel.addEventListener('input', updateGridSize);
+
+const SVGNS = 'http://www.w3.org/2000/svg';
+
+const selectedSVG = document.createElementNS(SVGNS, 'svg');
+const selectedRect = document.createElementNS(SVGNS, 'rect');
+let selectedImg;
+
+selectedRect.setAttribute('fill', 'black');
+selectedRect.setAttribute('width', IMAGE_SIZE);
+selectedRect.setAttribute('height', IMAGE_SIZE);
+selectedSVG.appendChild(selectedRect);
+document.getElementById('selectedObject').appendChild(selectedSVG);
+selectedSVG.style.display = 'block';
+selectedSVG.setAttribute('viewBox', `0 0 ${IMAGE_SIZE} ${IMAGE_SIZE}`);
+
+function getFilename(obj) {
+  // return (obj === obj.toUpperCase() ? 'text_' + obj : obj) + '.gif';
+  return `${obj}.gif`
+}
+
+function selectImage(obj) {
+  if (selectedImg) {
+    selectedImg.remove();
+  }
+  selectedImg = document.createElementNS(SVGNS, 'image');
+  selectedImg.setAttribute('width', IMAGE_SIZE);
+  selectedImg.setAttribute('height', IMAGE_SIZE);
+  selectedImg.setAttribute('href', getFilename(obj));
+  selectedObjectName = obj;
+  selectedSVG.appendChild(selectedImg);
+}
+
+let objectsPerRow = 4;
+
+
+myFetch('/all_objects', {}).then(result => {
+  const svg = document.createElementNS(SVGNS, 'svg');
+  const rect = document.createElementNS(SVGNS, 'rect');
+  const objectArea = document.getElementById('objectArea');
+  const promises = [];
+
+  result = Object.entries(result);
+  charMap = new Map(result);
+  // allow lowercase input for objects that are only uppercase
+  // [...charMap.keys()].filter(k => k === k.toUpperCase()).forEach(upper => {
+  //   if (!charMap.get(upper.toLowerCase()) && charMap.get(upper))
+  //     charMap.set(upper.toLowerCase(), charMap.get(upper));
+  // });
+
+  const rectHeight = Math.floor(result.length / objectsPerRow + 1) * IMAGE_SIZE;
+  rect.setAttribute('fill', 'black');
+  rect.setAttribute('width', objectsPerRow * IMAGE_SIZE);
+  rect.setAttribute('height', rectHeight);
+  svg.appendChild(rect);
+  objectArea.appendChild(svg);
+  svg.style.display = 'block';
+  svg.setAttribute('preserveAspectRatio', "xMinYMin meet");
+  svg.setAttribute('viewBox', `0 0 ${objectsPerRow * IMAGE_SIZE} ${rectHeight}`);
+
+  let r = 0;
+  let c = 0;
+  result.forEach(([key, obj]) => {
+    const image = document.createElementNS(SVGNS, 'image');
+    image.setAttribute('x', r++ * IMAGE_SIZE);
+    image.setAttribute('y', c * IMAGE_SIZE);
+    if (r % objectsPerRow === 0) {
+      r = 0;
+      c++;
+    }
+    image.setAttribute('width', IMAGE_SIZE);
+    image.setAttribute('height', IMAGE_SIZE);
+    // To avoid assuming case-sensitivity of the file system,
+    // we prefix uppercase strings with "text_".
+    promises.push(new Promise((done) => {
+      image.onload = image.onerror = done;
+      image.setAttribute('href', getFilename(obj));
+      objectArea.appendChild(image);
+      svg.appendChild(image);
+
+      image.addEventListener('click', (event) => {
+        selectImage(obj);
+      });
+    }));
+  });
+});
+
+var DIRECTIONS = {
+  'ArrowUp': 'up',
+  'W': 'up',
+  'K': 'up',
+
+  'ArrowDown': 'down',
+  'S': 'down',
+  'J': 'down',
+
+  'ArrowLeft': 'left',
+  'A': 'left',
+  'H': 'left',
+
+  'ArrowRight': 'right',
+  'D': 'right',
+  'L': 'right',
+}
+
+DIRECTION_VECTORS = {
+  'up': [-1, 0],
+  'down': [1, 0],
+  'left': [0, -1],
+  'right': [0, 1],
+}
+
+function nextRowCol(r, c) {
+  if (c < currentGrid[0].length - 1) return [r, c+1];
+  else if (r < currentGrid.length - 1) return [r+1, 0];
+  return [0, 0];
+}
+
+function handle_keydown(e) {
+  // Don't override Ctrl-R, Ctrl-Shift-J, etc.
+  const key = e.key;
+  const _key = key.length === 1 ? key.toUpperCase() : key;
+  if (e.ctrlKey || (e.altKey && !key === 'Enter') || e.metaKey) return;
+  if ([...charMap.keys()].includes(key)) {
+    selectImage(charMap.get(key));
+  }
+  else if (key.toLowerCase() === 'q') {
+    clearLevel();
+  }
+  else if (DIRECTIONS.hasOwnProperty(_key) || key === ' ') {
+    var newR, newC;
+    if (key === ' ') {
+      [newR, newC] = nextRowCol(currentHoverRow, currentHoverCol);
+    }
+    else { 
+      const [dr, dc] = DIRECTION_VECTORS[DIRECTIONS[_key]];
+      [newR, newC] = [currentHoverRow + dr, currentHoverCol + dc]; 
+    }
+    hoverHighlight(newR, newC);
+    // hide cursor when using keyboard to navigate
+    currentSvg.style.cursor = 'none';
+  }
+  else if (key === 'Enter' || key === 'Delete' || key === 'Backspace') {
+    placeObject(currentHoverRow, currentHoverCol, key !== 'Enter' || e.altKey || document.getElementById('clearSpot').checked)
+    // emulate space bar press after enter press
+    if (key === 'Enter')
+      handle_keydown({key: ' '});
+  }
+}
+document.addEventListener("keydown", handle_keydown);
+// allow 'alt' to control eraser
+var altPressed = false;
+document.addEventListener("keydown", ({key}) => {
+  const clearSpot = document.getElementById('clearSpot');
+  if (!clearSpot.checked && key === 'Alt') {
+    clearSpot.checked = true;
+    altPressed = true;
+  }
+});
+document.addEventListener("keyup", ({key}) => {
+  if (altPressed && key === 'Alt') {
+    document.getElementById('clearSpot').checked = false;
+    altPressed = false;
+  }
+});
+
+async function myFetch(loc, body){
+  try{
+    const response = await fetch(loc, {
+      method: 'POST',
+      cache: 'no-cache',
+      redirect: 'follow',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    if (response.ok) {
+      return await response.json();
+    } else {
+      return {error: await response.text()};
+    }
+  }catch(e){
+    return {error: await 'Could not communicate with the server.  Is it running?'}
+  }
+}
+
+function status(s, color){
+  var status = document.getElementById('status');
+  if (s) {
+    status.style.color = color;
+    status.innerHTML = s;
+    status.style.marginBottom = '10px';
+  } else {
+    status.innerHTML = '';
+  }
+}
+
+async function load_image(url) {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    await new Promise((done) => reader.onloadend = done);
+    return reader.result;
+}
+
+function downloadJSON() {
+  const jsonStr = JSON.stringify(currentGrid, null, 2)
+  if (document.getElementById('saveFile').checked) {
+    const download = document.getElementById('download')
+    download.href = "data:text/json;charset=utf-8," + encodeURIComponent(jsonStr); 
+    download.download = 'lab02_puzzle.json';
+    download.click();
+    download.href = '';
+  }
+  else {
+    const lvlTxt = document.getElementById('levelText')
+    lvlTxt.value = jsonStr
+    lvlTxt.focus()
+    lvlTxt.select()
+  }
+}
+document.getElementById('downloadJSON').addEventListener('click', downloadJSON);
+
+// grab first match, will be the valid key since they are added to charMap first
+const getKeyVal = (obj) => [...charMap].filter(([key, _obj]) => _obj === obj)[0];
+
+function downloadTXT() {
+  const download = document.getElementById('download');
+  // can't save to txt format if there is a cell with >1 objects
+  // ignore duplicate objects in one spot
+  if (!currentGrid.reduce((soFar, row) => soFar && row.reduce((_soFar, spot) => _soFar && (new Set(spot)).size <= 1, true), true)) {
+    // alert("TXT format does not support spots with more than one object.");
+    status("<br/><br/>TXT format does not support spots with more than one object.", 'red');
+    return;
+  }
+  else status(undefined);
+  const out = currentGrid.map(row => 
+    row.map(spot => (getKeyVal(spot[0]) ?? '.')[0]).join('')).join('\n'); 
+  if (document.getElementById('saveFile').checked) {
+    // download level file
+    download.href = "data:text/txt;charset=utf-8," + encodeURIComponent(out); 
+    download.download = 'lab02_puzzle.txt';
+    download.click();
+    download.href = '';
+  }
+  else {
+    // fill level text 
+    document.getElementById('levelText').value = out
+    const lvlTxt = document.getElementById('levelText')
+    lvlTxt.value = jsonStr
+    lvlTxt.focus()
+    lvlTxt.select()
+  }
+}
+document.getElementById('downloadTXT').addEventListener('click', downloadTXT);
+document.getElementById('saveFile').addEventListener('click', (event) => {
+  document.getElementById('genText').checked = !event.target.checked
+})
+document.getElementById('genText').addEventListener('click', (event) => {
+  document.getElementById('saveFile').checked = !event.target.checked
+})
+</script>
+
+</body>
+</html>

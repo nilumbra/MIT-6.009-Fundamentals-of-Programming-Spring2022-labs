@@ -1,0 +1,13 @@
+(begin
+    (:= (fib n) (fib-iter n 0 1))
+    (:= (fib-iter n a b)
+      (if (=? n 1)
+        b 
+        (if (=? n 0)
+          a
+          (fib-iter (- n 1) b (+ a b))
+        )
+      )
+    )
+    (:= (square x) (* x x))
+)

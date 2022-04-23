@@ -1,0 +1,3 @@
+https://hz.mit.edu/009_lab6/bird.jpg
+--
+https://hz.mit.edu/hello.txt

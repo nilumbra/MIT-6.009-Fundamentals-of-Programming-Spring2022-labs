@@ -1,0 +1,1 @@
+("Add(Mul(Num(40), Num(20)), Mul(Var('z'), Num(0)))", '40 * 20 + z * 0')

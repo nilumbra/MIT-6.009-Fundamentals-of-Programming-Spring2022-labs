@@ -1,0 +1,111 @@
+[
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": true,
+    "output": 6
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  },
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  },
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeEvaluationError"
+  },
+  {
+    "ok": true,
+    "output": -7
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  },
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError",
+    "when": "parse"
+  }
+]

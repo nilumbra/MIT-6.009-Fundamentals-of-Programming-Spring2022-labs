@@ -1,0 +1,29 @@
+(:= x 7)
+(:= y 8)
+(:= (square x) (* x x))
+y
+x
+(square (del x))
+y
+x
+((del square) y)
+y
+(square 7)
+(del y)
+y
+(:= * /)
+(* 42 28)
+((del *) 9 10)
+(* 42 28)
+(del *)
+(* 42 28)
+(del +)
+(+ 2 3)
+((function (x) (del y)) 7)
+(:= y 9)
+((function (x) (del y)) 7)
+y
+((function (x) (del +)) 7)
+((function (x) (del x)) 7)
+(((function (a) (function (b) (del a))) 7) 10)
+(((function (a) (function (b) (del b))) 9) 12)

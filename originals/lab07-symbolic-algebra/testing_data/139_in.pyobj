@@ -1,0 +1,1 @@
+lab.Pow(lab.Add(lab.Num(0), lab.Num(0)), lab.Sub(lab.Num(2), lab.Num(2)))

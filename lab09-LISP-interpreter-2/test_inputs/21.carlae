@@ -1,0 +1,6 @@
+(:= (call x) (x))
+(call (function () 2))
+(:= (spam) (call (function () 2)))
+(call spam)
+(call call)
+(call)

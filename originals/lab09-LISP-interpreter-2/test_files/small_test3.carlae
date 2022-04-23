@@ -1,0 +1,6 @@
+(map
+  (function (x)
+    (* x 2)
+  )
+  (list 1 2 3 4)
+)

@@ -1,0 +1,148 @@
+[
+  {
+    "ok": true,
+    "output": "bare-name"
+  },
+  {
+    "ok": true,
+    "output": 6.28
+  },
+  {
+    "ok": true,
+    "output": [
+      "spam"
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      "john",
+      "paul",
+      "george",
+      "ringo"
+    ]
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError"
+  },
+  {
+    "ok": true,
+    "output": "spam"
+  },
+  {
+    "ok": true,
+    "output": 2
+  },
+  {
+    "ok": true,
+    "output": 0.2
+  },
+  {
+    "ok": true,
+    "output": -3
+  },
+  {
+    "ok": true,
+    "output": -9.8
+  },
+  {
+    "ok": true,
+    "output": "--9.8"
+  },
+  {
+    "ok": true,
+    "output": "9.8.2"
+  },
+  {
+    "ok": true,
+    "output": [
+      "numbers",
+      3.14,
+      3,
+      -2,
+      -2.4
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      "multi",
+      "line",
+      "statement"
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      "with",
+      "comments"
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      "multiline",
+      "statement"
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      "weird",
+      "white",
+      "space"
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      "w3!|]\\d5y8[]1$"
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      "nested",
+      [
+        "expressions",
+        [
+          "test"
+        ],
+        [
+          "is",
+          "here"
+        ],
+        [
+          [
+            [
+              [
+                "now"
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeSyntaxError"
+  }
+]

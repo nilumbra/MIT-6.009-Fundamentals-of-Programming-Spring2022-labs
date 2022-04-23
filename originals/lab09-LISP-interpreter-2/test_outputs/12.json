@@ -1,0 +1,18 @@
+[
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": true,
+    "output": 9
+  },
+  {
+    "ok": true,
+    "output": 37
+  }
+]

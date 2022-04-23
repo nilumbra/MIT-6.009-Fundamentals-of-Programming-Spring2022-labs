@@ -1,0 +1,8 @@
+(:= (spam eggs) (function (x y) (- eggs x y)))
+(:= eggs 7)
+(:= something (spam 6))
+(something 2 3)
+((spam 9) 8 7)
+eggs
+x
+y

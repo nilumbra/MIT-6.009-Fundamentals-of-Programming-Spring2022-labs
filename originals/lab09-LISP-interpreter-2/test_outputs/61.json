@@ -1,0 +1,118 @@
+[
+  {
+    "ok": true,
+    "output": 7
+  },
+  {
+    "ok": true,
+    "output": 8
+  },
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": true,
+    "output": 8
+  },
+  {
+    "ok": true,
+    "output": 7
+  },
+  {
+    "ok": true,
+    "output": 49
+  },
+  {
+    "ok": true,
+    "output": 8
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": true,
+    "output": 64
+  },
+  {
+    "ok": true,
+    "output": 8
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": true,
+    "output": 8
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": true,
+    "output": 1.5
+  },
+  {
+    "ok": true,
+    "output": 0.9
+  },
+  {
+    "ok": true,
+    "output": 1176
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": true,
+    "output": 1176
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": true,
+    "output": 5
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": true,
+    "output": 9
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": true,
+    "output": 9
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": true,
+    "output": 7
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": true,
+    "output": 12
+  }
+]

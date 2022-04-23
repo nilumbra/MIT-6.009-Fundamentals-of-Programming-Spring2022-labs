@@ -1,0 +1,24 @@
+(:= (+ x y) (* x y))
+(+ 2 3)
+(:=)
+(:= x)
+(:= x y)
+(:= x y z 3)
+(:= 7 8)
+x
+y
+z
+(function)
+(function 2 3)
+(function (x) 3)
+(function (x) 3 4)
+(function () (- 1 8))
+((function () (- 1 8)) 7)
+((function () (- 1 8)))
+(function (x 7) 8)
+(:= () x)
+(:= (square) 2)
+(:= (7) 8)
+(:= (square 7) 49)
+:= x 20
+function (x) 20

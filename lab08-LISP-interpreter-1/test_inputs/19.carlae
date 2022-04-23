@@ -1,0 +1,6 @@
+(:= (spam x) (function (y) (+ (* 2 x) (* y y))))
+(:= (eggs x y) (spam x))
+((eggs 9 10) 2)
+(:= x 20)
+(:= y (eggs 8 7))
+(y 10)

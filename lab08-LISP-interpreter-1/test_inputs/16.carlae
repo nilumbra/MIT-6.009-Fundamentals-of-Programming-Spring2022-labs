@@ -1,0 +1,4 @@
+(:= (spam) (* eggs 3))
+(spam)
+(:= eggs 20)
+(spam)

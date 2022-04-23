@@ -1,0 +1,112 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="./leaflet.css" />
+        <script src="./leaflet.js"></script>
+        <script src="./L.KML.js"></script>
+    </head>
+    <body>
+        <div style="width: 100vw; height: 100vh" id="map"></div>
+        <script type="text/javascript">
+            async function postData(url = '', data = {}) {
+              // helper to post data using fetch(), which is really nice...
+              // grabbed from https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+              // Default options are marked with *
+              const response = await fetch(url, {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'same-origin', // include, *same-origin, omit
+                headers: {
+                  'Content-Type': 'application/json'
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: 'follow', // manual, *follow, error
+                referrerPolicy: 'no-referrer', // no-referrer, *client
+                body: JSON.stringify(data) // body data type must match "Content-Type" header
+              });
+              return await response.json(); // parses JSON response into native JavaScript objects
+            }
+
+            const map = new L.Map('map', { center: new L.LatLng(%.06f, %.06f), zoom: 13, doubleClickZoom: false });
+            const osm = new L.TileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png');
+
+            function show_kml(kmlstring) {
+                console.log('showing kml!')
+                const parser = new DOMParser();
+                const kml = parser.parseFromString(kmlstring, 'text/xml');
+                kml_layer = new L.KML(kml);
+                map.addLayer(kml_layer);
+                map.fitBounds(kml_layer.getBounds());
+            }
+
+            // variable to store our current KML layer so that we can add/remove it
+            var kml_layer = null;
+
+
+            const params = new URLSearchParams(window.location.search);
+
+            const initialKML = params.get('kml_path')
+            if (initialKML !== null) {
+                fetch(initialKML)
+                     .then(res => res.text())
+                     .then(kmltext => show_kml(kmltext));
+            }
+
+            // where are we in the routing process?
+            // this is an array of up to 2 elements;
+            // 0 elements: waiting for first click
+            // 1 element: waiting for second click
+            // 2 elements: routing
+            var routing_state = [];
+
+            map.addLayer(osm);
+
+            var popup = L.popup();
+
+            function clickHandler(e) {
+                if (routing_state.length == 0) {
+                    routing_state.push([e.latlng.lat, e.latlng.lng]);
+                    popup.setLatLng(e.latlng)
+                         .setContent("Starting Point for Routing: (" + Math.round(e.latlng.lat*10000)/10000 + ", " + Math.round(e.latlng.lng*10000)/10000 + ")<br/>Double-click somewhere else to find a route to that point.")
+                         .openOn(map)
+
+                }else if (routing_state.length == 1) {
+                    routing_state.push([e.latlng.lat, e.latlng.lng]);
+                    popup.setLatLng(e.latlng)
+                         .setContent("Finding route")
+                         .openOn(map)
+                    // clear existing data
+                    if (kml_layer !== null) {
+                        map.removeLayer(kml_layer);
+                    }
+                    // fire off post request
+                    const route_type = params.get('type');
+                    postData('/route', {
+                        type: route_type === null ? 'short' : route_type,
+                        startLat: routing_state[0][0],
+                        startLon: routing_state[0][1],
+                        endLat: routing_state[1][0],
+                        endLon: routing_state[1][1],
+                    })
+                        .then(json => {
+                            if (json.ok) {
+                                show_kml(json.kml);
+                            }else{
+                                alert('ERROR: '+ json.error)
+                            }
+                            routing_state = [];
+                            map.closePopup()
+                        }, json => {
+                            alert('ERROR!  Check your terminal for more information.');
+                            routing_state = [];
+                            map.closePopup();
+                        })
+                }else{
+                    map.closePopup();
+                }
+            }
+
+            map.on('dblclick', clickHandler);
+        </script>
+    </body>
+</html>

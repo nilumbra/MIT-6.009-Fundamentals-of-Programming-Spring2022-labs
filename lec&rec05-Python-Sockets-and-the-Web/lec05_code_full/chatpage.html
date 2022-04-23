@@ -1,0 +1,19 @@
+<h3>Welcome to the Chat!</h3>
+
+<iframe id='messages' src='all_messages'></iframe>
+
+<form action="new_message" method="GET">
+<input type="hidden" name="user" value="%s"/>
+<input type="text" name="msg" /><br/>
+<input type="submit" value="Send" />
+</form>
+
+<script type="text/javascript">
+var iframe = document.getElementById('messages');
+iframe.width = document.body.scrollWidth * .75;
+iframe.height = document.body.scrollHeight * .75;
+// reload the contents of the iframe (the chat messages) every 10 seconds
+setInterval(function(){
+    iframe.contentWindow.location.reload(true);
+}, 1000);
+</script>

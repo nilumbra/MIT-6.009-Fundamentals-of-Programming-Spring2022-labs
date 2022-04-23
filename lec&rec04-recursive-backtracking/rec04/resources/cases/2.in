@@ -1,0 +1,5 @@
+{
+  "test": "vertical bag in 3x1 tent, no rocks",
+  "tent_size": [3,1],
+  "rocks": []
+}

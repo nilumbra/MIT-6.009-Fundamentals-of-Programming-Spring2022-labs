@@ -1,0 +1,5 @@
+{
+  "test": "reverse-C-shaped bag in 3x2 tent, one rock",
+  "tent_size": [3,2],
+  "rocks": [[1,0]]
+}

@@ -1,0 +1,19 @@
+(begin
+    (:= angles (list 60 -120 60 0))
+
+    (:= (koch length order) (begin
+        (if (=? order 0)
+            (turtle forward length)
+            (begin
+                (koch (/ length 3) (- order 1))
+                (turtle left 60)
+                (koch (/ length 3) (- order 1))
+                (turtle left -120)
+                (koch (/ length 3) (- order 1))
+                (turtle left 60)
+                (koch (/ length 3) (- order 1))
+            )
+    )))
+
+    (koch 600 5)
+)

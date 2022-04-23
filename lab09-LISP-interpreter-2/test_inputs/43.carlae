@@ -1,0 +1,6 @@
+(tail (tail (tail (list 1 2 3 4))))
+(head (tail (tail (tail (list 1 2 3 4)))))
+(tail (head (list (list 1 2 (list 3)) 4 5 6)))
+(head (head (tail (tail (head (list (list 1 2 (list 3)) 4 5 6))))))
+(tail (head (tail (tail (head (list (list 1 2 (list 3)) 4 5 6))))))
+(head (list))

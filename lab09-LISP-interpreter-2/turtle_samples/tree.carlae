@@ -1,0 +1,34 @@
+(begin
+    (:= (tree size) (begin
+        (if (>= size 5)
+            (begin
+                # branch 1
+                (turtle forward (/ size 3))
+                (turtle left 30)
+                (tree (* 0.66667 size))
+                (turtle left -30)
+
+                # branch 2
+                (turtle forward (/ size 6))
+                (turtle left -25)
+                (tree (/ size 2))
+                (turtle left 25)
+
+                # branch 3
+                (turtle forward (/ size 3))
+                (turtle left -25)
+                (tree (/ size 2))
+                (turtle left 25)
+
+                (turtle forward (- (* 5 (/ size 6))))
+            )
+
+            (begin
+                (turtle forward size)
+                (turtle forward (- 0 size))
+            )
+        )
+    ))
+    (turtle left 90)
+    (tree 300)
+)

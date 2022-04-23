@@ -1,0 +1,644 @@
+/* Styles affecting catsoop page */
+.cs_content {
+  flex-basis: 90%;
+}
+
+.CodeMirror {
+  height: unset;
+}
+
+.question.question-diagram {
+  width: 100%;
+  border: none;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 301; /* Sit on top */
+  padding-top: 50px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  text-align: center;
+  /* overflow: scroll;
+  max-height: 500px;
+  padding-bottom: 50px; */
+}
+
+/* The Close Button */
+.close-modal {
+  color: #aaaaaa;
+  right: 10px;
+  top: 10px;
+  position: absolute;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.reset-modal {
+  top: 150px;
+}
+
+.dropzone .CodeMirror {
+  border: 1px solid #eee;
+  height: auto;
+  min-height: 40px;
+}
+
+
+
+.reset-modal .modal-content {
+  max-width: 400px;
+}
+
+.button {
+  border-radius: 3px;
+  border: 1px solid black;
+}
+
+.button:hover {
+  border: 3px solid black;
+}
+
+.button.inactive {
+  opacity: .5;
+}
+
+.button.inactive:hover {
+  border: 1px solid black;
+}
+
+.undo {
+  position: absolute;
+  z-index: 201;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.redo {
+  position: absolute;
+  left: 22px;
+  z-index: 201;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.reset {
+  position: absolute;
+  top:-10px;
+  left: 46px;
+  z-index: 201;
+  width: 60px;
+  height: 22px;
+  cursor: pointer;
+  font-size: 15px;
+  background-color: white;
+}
+
+
+
+.loader {
+  position: absolute;
+  z-index: 200;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  animation-delay: .1s;
+  -webkit-animation-delay: .1s;
+  opacity: 0;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); opacity: 1;}
+  100% { -webkit-transform: rotate(360deg); opacity: 1;}
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); opacity: 1;}
+  100% { transform: rotate(360deg); opacity: 1;}
+}
+
+.instruction-btn {
+  cursor: pointer;
+  margin: 10px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+input, select, textarea, button{font-family:inherit;}
+
+.annotation {
+  visibility: hidden;
+  position: absolute;
+  top: 20px;
+  left:100%;
+  width:60px;
+}
+
+.annotation.show {
+  z-index: 150;
+  visibility: visible;
+  -webkit-animation: fadeIn .5s;
+  animation: fadeIn .5s;
+}
+
+
+.edit-popup {
+  visibility: hidden;
+  width: 20px;
+  background-color: rgb(154, 154, 154);
+  text-align: center;
+  border-radius: 3px;
+  position: absolute;
+  top: 0px;
+  left:100%;
+  cursor: pointer;
+}
+
+/* Toggle this class - hide and show the popup */
+.edit-popup.show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+
+
+.box {
+  background: white;
+  border: 1px solid darkgray;
+  border-radius: 4px;
+  padding: 5px;
+  cursor: move;
+}
+
+.fixed-box {
+  border: 2px solid black;
+}
+
+.fixed-box .top-dot-container {
+  border: 2px solid black;
+  top: -23px;
+}
+
+
+.type-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.instructions{
+  width:100%;
+}
+
+.hidden {
+  display: none;
+}
+
+.loader.hidden-2 {
+  display: none;
+}
+
+.lineActive:hover {
+  font-size: large;
+  font-weight: bold;
+}
+
+.dict-entry {
+  height: 60px;
+}
+
+.dict-entry .dict-kv {
+  width: 65px;
+}
+
+.dict-entry td {
+  
+  position: relative;
+  padding-top: 0px;
+}
+
+td .key-cell {
+  top: 10px;
+  left: 53px;
+}
+
+td .val-cell {
+  top: 34px;
+  left: 53px;
+}
+
+
+.set-add {
+  width: 75px;
+  height: 100px;
+  margin: 3px;
+  border: 1px solid black;
+  cursor: pointer;
+  position: relative;
+}
+
+.function-body{
+  resize: both;
+}
+
+
+
+.draggable {
+  padding: 10px;
+  margin: 10px 10px 10px 0;
+  cursor: move;
+}
+
+.trash {
+  width: 33%;
+  height: 100%;
+  background-color: lightblue;
+  position: absolute;
+  right: 10px;
+  top: 0;
+}
+
+.trash-symbol {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: lightblue;
+  padding: 5px;
+  border-radius: 10px 0 0 10px;
+}
+
+.droppable-over .trash-symbol {
+  border: 2px solid black;
+  border-right: 0 solid black;
+}
+
+.trash.droppable-over {
+  right: 15px;
+  border: 2px solid black;
+}
+
+.dot {
+  border-radius: 50%;
+  height: 7px;
+  width: 7px;
+  position: absolute;
+  top: 15px;
+  right: 0px;
+  z-index: 100;
+}
+
+.dot.fixed {
+  background-color: gray;
+}
+
+.return-dot-container {
+  position:relative; float:right; margin-left:22px; height:20px; width:20px;
+}
+
+.return-dot {
+  left: 3px;
+  top: 10px;
+}
+
+.lineActive.dot:not(.fixed-source):hover {
+  border: 2px solid black;
+  margin-top: -2px;
+  margin-bottom: -2px;
+}
+
+.relative-box {
+  position: relative;
+  width: 10px;
+  min-width: 10px;
+}
+
+.lineActive {
+  background-color: black;
+}
+
+.frame-dot-container .dot {
+  top: 6px;
+  left: 7px;
+}
+
+
+
+.dot-container {
+  position: relative;
+}
+
+
+.varCol {
+  padding: 0px;
+}
+
+.varCol input {
+  min-width: 20px;
+}
+
+
+
+.dropzone {
+  width: 1200px;
+  max-width: 100%;
+  height: 700px;
+  padding-right: 0.5em;
+  float: left;
+  margin: 5px;
+  position: relative;
+  background-color: rgb(226, 225, 225);
+  border: 1px solid darkgray;
+  border-radius: 4px;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.dropzone-background {
+  width:150%;
+  margin-left: 0px;
+  position: relative;
+}
+
+.dropzone input {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.activeElement{
+  font-weight: bold;
+}
+
+.remove {
+  visibility: hidden;
+}
+
+.removeActive {
+  visibility: visible;
+  color: black;
+  cursor: pointer;
+  font-size: small;
+  opacity: .5;
+}
+
+.removeActive:hover {
+  opacity: 1;
+}
+
+.addArg {
+  opacity: .7;
+}
+
+.addArg:hover {
+  opacity: 1;
+}
+
+.remove-img {
+  padding-top: 4px;
+}
+
+.line {
+  color: gray;
+}
+
+.lineActive {
+  color: black;
+  cursor: pointer;
+}
+
+.overlay {
+  overflow: visible;
+  pointer-events: none;
+  background: none !important;
+  z-index: 20;
+  position: relative;
+}
+
+.highlight {
+  border: solid black 3px;
+}
+
+.hint-highlight {
+  border: solid red 5px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  font-weight: bold;
+}
+
+.inactive {
+  cursor: move;
+  color: gray;
+  border-color: gray;
+}
+
+.listCell {
+  padding: 0 6px;
+  text-align: center;
+}
+
+.addEntry {
+  right: 5px;
+  position: absolute;
+  top: 5px;
+}
+
+.sequence {
+  padding-bottom: 15px;
+  padding-left: 5px;
+  padding-top: 3px;
+  padding-right: 15px;
+  
+}
+
+.sequence tr { display: block; float: left; }
+.sequence th, .sequence td { display: block; }
+
+.sequence .trash-can {
+  padding: 0;
+  font-size: 12px;
+  border: 0px;
+}
+
+
+.sequence-dot-container {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.sequence-dot-container .dot {
+  top: 6px;
+  left: 6px;
+}
+
+.instance-box {
+  min-width: 100px;
+  padding-top: 2px;
+  padding-bottom: 0px;
+}
+
+.class-box {
+  padding-top: 2px;
+  padding-bottom: 0px;
+}
+
+.source {
+  text-align: center;
+}
+
+.dropzone .frame {
+  padding-top: 2px;
+}
+
+.dropzone .frame.is_global {
+  padding-bottom: 0px;
+}
+
+.frame-dot-container {
+  position: absolute;
+  top: -20px;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  right: 0px;
+  border: 1px solid darkgray;
+  border-radius: 4px;
+}
+
+.top-dot-container {
+  position: absolute;
+  top: -21px;
+  width: 20px;
+  height: 19px;
+  background-color: white;
+  right: 0px;
+  border: 1px solid darkgray;
+  border-radius: 4px;
+}
+
+.frame .top-dot-container {
+  position: absolute;
+  top: 0px;
+  width: 19px;
+  height: 19px;
+  background-color: white;
+  left: -22px;
+  border: 1px solid darkgray;
+  border-radius: 4px;
+}
+
+.top-dot-container .dot {
+  top: 6px;
+  left: 6px;
+}
+
+.sequenceSource {
+  width: 19px;
+}
+
+.box-label {
+  position: absolute;
+  top: -20px;
+  left: 0px;
+  white-space: nowrap;
+}
+
+
+.dropzone input {
+  width: auto;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+.box tr {
+  height: 30px;
+}
+
+.box td {
+  padding: 0;
+  padding-left: 3px;
+}
+
+.box.float {
+  min-width: 25px;
+}
+
+.box.int {
+  min-width: 18px;
+}
+
+.grid tr td {
+  border: solid black 1px;
+  margin: 0px;
+}
+
+.grid {
+  border-collapse: collapse;
+  display: inline;
+}
+
+.instructions code {
+  display: block;
+  white-space: pre-wrap;
+  background-color: lightgray; border-radius: 5px; padding:5px;
+}
+
+.bound-method {
+  padding-top: 3px;
+  padding-bottom: 0;
+}
+
+.bound-method .box-label {
+  font-size: small;
+}
+
+
+.bound-method .dot {
+  top:12px
+}

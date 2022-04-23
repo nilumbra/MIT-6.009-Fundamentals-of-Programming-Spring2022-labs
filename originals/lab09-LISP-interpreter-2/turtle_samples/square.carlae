@@ -1,0 +1,26 @@
+(begin
+    (:= (repeat-helper n i func)
+        (if (=? n i)
+            @t
+            (begin (func i) (repeat-helper n (+ 1 i) func))
+        )
+    )
+    (:= (repeat-n-times n func) (repeat-helper n 0 func))
+
+    (:= (square size)
+        (repeat-n-times 4 (function (_) (begin
+                (turtle forward size)
+                (turtle left 90)
+            ))
+        )
+    )
+
+    (repeat-n-times 50 (function (i) (begin
+        (square (* i 5))
+        (turtle penup)
+        (turtle forward i)
+        (turtle pendown)
+        (turtle left 10)
+    ))
+    )
+)

@@ -1,0 +1,126 @@
+[
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": true,
+    "output": [
+      7,
+      9,
+      3,
+      2
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      5040,
+      362880,
+      6,
+      2
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      7,
+      9,
+      3,
+      2
+    ]
+  },
+  {
+    "ok": true,
+    "output": 0
+  },
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": true,
+    "output": [
+      5040,
+      362880,
+      6,
+      2
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      7,
+      9,
+      3,
+      2
+    ]
+  },
+  {
+    "ok": true,
+    "output": 0
+  },
+  {
+    "ok": true,
+    "output": []
+  },
+  {
+    "ok": true,
+    "output": 0
+  },
+  {
+    "ok": true,
+    "output": [
+      -1,
+      -2,
+      -3
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      0,
+      3,
+      9,
+      1
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      3,
+      7,
+      14
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      [
+        2,
+        4,
+        6
+      ],
+      [
+        18,
+        16,
+        14
+      ],
+      [
+        20,
+        26,
+        28,
+        30,
+        12
+      ]
+    ]
+  },
+  {
+    "ok": true,
+    "output": []
+  },
+  {
+    "ok": false,
+    "type": "CarlaeEvaluationError"
+  }
+]

@@ -1,0 +1,22 @@
+(if @t 7 8)
+(if @f 7 8)
+((if @t (function (x) (* x x)) (function (x) (+ x x))) 7)
+((if @f (function (x) (* x x)) (function (x) (+ x x))) 7)
+(if @t (:= x 9) (:= x 10))
+(if @f (:= y 11) (:= y 12))
+(if @t (:= z 13) (:= a 14))
+(if @f (:= b 15) (:= c 16))
+x
+y
+z
+a
+b
+c
+(if (if @t @f @t) 9 10)
+(if (:= b @t) 20 30)
+(if (not b) 20 30)
+(if (if @t @f @t) (if @t (:= d 20) (:= e 30)) (if @f (:= f 40) (:= g 50)))
+d
+e
+f
+g

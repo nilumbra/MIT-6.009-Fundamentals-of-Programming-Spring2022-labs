@@ -1,0 +1,38 @@
+[
+  {
+    "ok": true,
+    "output": 3
+  },
+  {
+    "ok": true,
+    "output": -2
+  },
+  {
+    "ok": true,
+    "output": 7.65
+  },
+  {
+    "ok": true,
+    "output": -8.9
+  },
+  {
+    "ok": true,
+    "output": 5
+  },
+  {
+    "ok": true,
+    "output": 27
+  },
+  {
+    "ok": true,
+    "output": -1
+  },
+  {
+    "ok": true,
+    "output": -21
+  },
+  {
+    "ok": false,
+    "type": "CarlaeEvaluationError"
+  }
+]

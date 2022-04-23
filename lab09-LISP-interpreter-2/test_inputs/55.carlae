@@ -1,0 +1,2 @@
+(begin (:= y 2) (:= (square x) (* x x)) (square 2))
+(square (+ y y y))

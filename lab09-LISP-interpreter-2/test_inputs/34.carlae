@@ -1,0 +1,6 @@
+(if (not (< 1 2)) 1 0)
+(if (not (> 1 2)) 1 0)
+(not)
+(not 1 2 3)
+(:= not (function (x y z) (+ x (* y z))))
+(not 1 2 3)

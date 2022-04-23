@@ -1,0 +1,71 @@
+[
+  [
+    [],
+    [],
+    [],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    []
+  ],
+  [[], [], ["wall"], ["wall"], [], [], [], [], [], ["wall"], ["wall"]],
+  [
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    [],
+    [],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    [],
+    [],
+    ["wall"]
+  ],
+  [["wall"], [], [], [], ["wall"], [], [], [], ["wall"], [], ["wall"]],
+  [
+    ["wall"],
+    ["player"],
+    ["computer"],
+    ["target", "computer"],
+    ["target", "computer"],
+    ["target", "computer"],
+    ["target"],
+    [],
+    ["wall"],
+    [],
+    ["wall"]
+  ],
+  [["wall"], ["wall"], [], [], [], [], [], [], ["wall"], [], ["wall"]],
+  [
+    [],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    [],
+    ["wall"],
+    ["wall"],
+    [],
+    [],
+    ["wall"]
+  ],
+  [[], [], [], [], ["wall"], [], [], [], [], ["wall"], ["wall"]],
+  [
+    [],
+    [],
+    [],
+    [],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    ["wall"],
+    []
+  ]
+]

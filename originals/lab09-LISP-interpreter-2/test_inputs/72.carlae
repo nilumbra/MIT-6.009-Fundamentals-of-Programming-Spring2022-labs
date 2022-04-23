@@ -1,0 +1,13 @@
+(:= (allprimes n) (allprimes-iter n (list)))
+(:= (prime-iter n m) (if (>= n m) @t (if (divides? m n) @f (prime-iter n (+ m 1)))))
+(:= (prime? n) (if (< n 2) @f (prime-iter n 2)))
+(:= (prime-iter n m) (if (>= m n) @t (if (divides? m n) @f (prime-iter n (+ m 1)))))
+(:= (divides? x y) (if (=? y 0) @t (if (< y 0) @f (divides? x (- y x)))))
+(:= (allprimes-iter n sofar) (if (< n 0) sofar (let ((isprime (prime? n))) (let ((newlist (if isprime (concat sofar (list n)) sofar))) (allprimes-iter (- n 1) newlist)))))
+(allprimes 30)
+n
+m
+y
+x
+newlist
+isprime

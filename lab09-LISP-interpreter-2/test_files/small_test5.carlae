@@ -1,0 +1,8 @@
+(begin
+  (:= (foo bar) (function (x y) (- bar x y)))
+  (:= bar 7)
+  (:= something (foo 6))
+  (list (something 2 3)
+        ((foo 9) 8 7)
+  )
+)

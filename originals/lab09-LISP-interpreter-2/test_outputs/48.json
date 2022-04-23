@@ -1,0 +1,50 @@
+[
+  {
+    "ok": true,
+    "output": [
+      7,
+      9,
+      3,
+      2
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      -7,
+      -9,
+      -3,
+      -2
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      7,
+      9,
+      3,
+      2
+    ]
+  },
+  {
+    "ok": true,
+    "output": [
+      400,
+      324,
+      256,
+      196
+    ]
+  },
+  {
+    "ok": true,
+    "output": []
+  },
+  {
+    "ok": true,
+    "output": []
+  },
+  {
+    "ok": false,
+    "type": "CarlaeEvaluationError"
+  }
+]

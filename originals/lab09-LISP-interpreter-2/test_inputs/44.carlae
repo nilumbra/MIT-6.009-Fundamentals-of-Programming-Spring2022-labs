@@ -1,0 +1,7 @@
+(length (list 9 8 7 6))
+(length (list (list 7 8 9)))
+(length (list))
+(length 7)
+(length (pair 1 2))
+(length nil)
+(length (tail (tail (list 1 2))))

@@ -1,0 +1,1 @@
+lab.Pow(lab.Add(lab.Num(3), lab.Mul(lab.Var('x'), lab.Var('z'))), lab.Num(1))

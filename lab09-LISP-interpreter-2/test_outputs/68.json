@@ -1,0 +1,14 @@
+[
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  },
+  {
+    "ok": false,
+    "type": "CarlaeNameError"
+  }
+]

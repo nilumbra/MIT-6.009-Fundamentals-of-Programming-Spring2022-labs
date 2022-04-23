@@ -1,0 +1,4 @@
+(:= (spam eggs) (* eggs 3))
+(:= eggs 7)
+(spam 6)
+eggs
