@@ -5,13 +5,11 @@ from util import read_osm_data, great_circle_distance, to_local_kml_url
 
 # NO ADDITIONAL IMPORTS!
 
-
 ALLOWED_HIGHWAY_TYPES = {
     'motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'unclassified',
     'residential', 'living_street', 'motorway_link', 'trunk_link',
     'primary_link', 'secondary_link', 'tertiary_link',
 }
-
 
 DEFAULT_SPEED_LIMIT_MPH = {
     'motorway': 60,
@@ -29,14 +27,12 @@ DEFAULT_SPEED_LIMIT_MPH = {
     'tertiary_link': 25,
 }
 
-
 def build_internal_representation(nodes_filename, ways_filename):
     """
     Create any internal representation you you want for the specified map, by
     reading the data from the given filenames (using read_osm_data)
     """
     return None
-
 
 def find_short_path_nodes(map_rep, node1, node2):
     """
@@ -71,7 +67,6 @@ def find_short_path(map_rep, loc1, loc2):
     """
     raise NotImplementedError
 
-
 def find_fast_path(map_rep, loc1, loc2):
     """
     Return the shortest path between the two locations, in terms of expected
@@ -89,7 +84,6 @@ def find_fast_path(map_rep, loc1, loc2):
         (in terms of time) from loc1 to loc2.
     """
     raise NotImplementedError
-
 
 if __name__ == '__main__':
     # additional code here will be run only when lab.py is invoked directly
