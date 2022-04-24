@@ -2,6 +2,7 @@
 
 import typing
 from util import read_osm_data, great_circle_distance, to_local_kml_url
+import os
 
 # NO ADDITIONAL IMPORTS!
 
@@ -32,6 +33,43 @@ def build_internal_representation(nodes_filename, ways_filename):
     Create any internal representation you you want for the specified map, by
     reading the data from the given filenames (using read_osm_data)
     """
+    MAP = {
+            'graph': {},
+            'nodes': {}
+        }
+    graph = MAP['graph']
+    nodes = MAP['nodes']
+    # 1. Build graph from edges:
+    for way in read_osm_data(os.path.join('./resources', ways_filename)):
+        if 'highway' in way['tags'] and way['tags']['highway'] in ALLOWED_HIGHWAY_TYPES:
+            if 'oneway' in way['tags'] and way['tags']['oneway'] == 'yes':
+                for i in range(1, len(way['nodes'])):
+                    if way['nodes'][i - 1] not in graph:
+                        graph[way['nodes'][i - 1]] = [way['nodes'][i]]
+                    else:
+                        graph[way['nodes'][i - 1]].append(way['nodes'][i])
+            else:
+                for i in range(1, len(way['nodes'])):
+                    if way['nodes'][i - 1] not in graph:
+                        graph[way['nodes'][i - 1]] = [way['nodes'][i]]
+                    else:
+                        graph[way['nodes'][i - 1]].append(way['nodes'][i])
+
+                    if way['nodes'][i] not in graph:
+                        graph[way['nodes'][i]] = [way['nodes'][i - 1]]
+                    else:
+                        graph[way['nodes'][i]].append(way['nodes'][i - 1])
+    
+    for node in read_osm_data(os.path.join('./resources', nodes_filename)):
+        if node['id'] in graph:
+            nodes[node['id']] = {'lat': node['lat'], 'lon': node['lon']}
+            if 'tags' in node:
+                nodes[node['id']]['tags'] = node['tags']
+
+    return MAP
+
+     
+
     return None
 
 def find_short_path_nodes(map_rep, node1, node2):
