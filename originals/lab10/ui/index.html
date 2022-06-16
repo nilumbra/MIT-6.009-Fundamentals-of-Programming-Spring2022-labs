@@ -1,0 +1,454 @@
+<html>
+<head>
+<title>6.009 Lab 10</title>
+</head>
+<body>
+<style>
+image,img {
+  -ms-interpolation-mode: nearest-neighbor;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+}
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+body {
+  background-color: #333;
+  color: white;
+  display: grid;
+  grid-template-areas: "other" "status" "game";
+  grid-template-rows: min-content min-content 1fr;
+}
+#other {
+  grid-area: other;
+}
+#header {
+  /*grid-area: header;*/
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+#header > img {
+  flex: 0 1;
+/* To trim header images:
+  margin-top: -10px;
+  margin-bottom: -10px;
+*/
+}
+#controls {
+  /*grid-area: controls;*/
+  text-align: center;
+}
+#status {
+  grid-area: status;
+  padding: 0px 1em;
+  overflow: auto;
+  max-height: 50vh;
+}
+#output {
+  grid-area: game;
+  position: relative;
+  margin-top: 20px;
+}
+#output > svg {
+  position: absolute;
+  /*
+  background-color: #111;
+  box-shadow: 0px 0px 36px 9px #FFFFFF;
+  margin-top: 36px;
+  height: calc(100% - 36px);
+  */
+  border: 10px black;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+#you_win {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  visibility: hidden;
+}
+#you_win.show {
+  visibility: visible;
+}
+#you_win > div {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#you_win > div > img {
+  width: 0%;
+  max-height: 0%;
+  transition: width 2s, max-height 2s;
+}
+#you_win > div:first-child > img {
+  animation: rotate linear 2s infinite;
+}
+#you_win > div:last-child > img {
+  animation: rotate linear 2.5s infinite;
+}
+#you_win.show > div > img {
+  width: 75%;
+  max-height: 75%;
+  opacity: 75%;
+}
+@keyframes rotate {
+  0%, 50% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(-25deg);
+  }
+  70% {
+    transform: rotate(25deg);
+  }
+}
+@media (min-aspect-ratio: 9/7) {  /* wide screen */
+  body {
+    grid-template-areas: "status status" "game other";
+    grid-template-rows: min-content 1fr;
+    grid-template-columns: 1fr 170px;
+    column-gap: 25px;
+  }
+  #levels {
+    width: 100%;
+  }
+  #output {
+    margin-top: 0;
+  }
+}
+</style>
+<div id="other">
+  <div id="header">
+    <img src="6009.gif" width=100>
+    <img src="text_LAB.gif" width=100>
+    <img src="text_TEN.gif" width=100>
+  </div>
+  <div id="controls">
+    <div style="visibility: hidden;" id="levelselect">
+    level select: <select id="levels"></select><br/>
+    <button id="reload" title="reload and reset current level">reload level (<kbd>r</kbd>)</button>
+    <button id="undo" title="undo the last move">undo last move (<kbd>z</kbd>)</button>
+    </div>
+    <a id="download" style="display: none"></a>
+    <button style="display: none" id="downloadSVG" title="download current game view as SVG, e.g. for posting to forum">Screenshot</button>
+    <br/>
+    Raw Level JSON:<br/>
+    <textarea id="rawlevel" style="width:100%"></textarea><br/>
+    <button id="runraw">load json</button>
+    </textarea>
+
+    <br/>&nbsp;<br/>
+    <button onclick="location.href='/builder';"  id="builder" title="go to Snek Is You Level Builder">level builder</button>
+  </div>
+</div>
+<div id="status"></div>
+<div id="output">
+  <div id="you_win">
+    <div><img src="text_YOU.gif"></div>
+    <div><img src="text_WIN.gif"></div>
+  </div>
+</div>
+
+<script type="text/javascript">
+BOARD = null;
+var currentRender = 0, currentSvg, currentRect, lastGrid, lastImages;
+var undoQueue = [];
+
+function render(grid){
+  const thisRender = ++currentRender;
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const IMAGE_SIZE = 50;
+  const svg = document.createElementNS(SVGNS, 'svg');
+  const rect = document.createElementNS(SVGNS, 'rect');
+  rect.setAttribute('fill', 'black');
+  svg.appendChild(rect);
+
+  var width = 0, height = grid.length;
+  var images = {};  // mapping from r,c string to array of images rendered there
+  var redrawn = []; // list of r,c pairs that need to be redrawn / cleared
+  var promises = []; // list of promises for images loading
+
+  for (let r = 0; r < grid.length; r++) {
+    const row = grid[r];
+    width = Math.max(width, row.length);
+    for (let c = 0; c < row.length; c++) {
+      const cell = row[c];
+      const here = [r, c];
+      // Check for any changes in this grid cell
+      if (lastGrid && lastGrid[r] && lastGrid[r][c] && JSON.stringify(cell) === JSON.stringify(lastGrid[r][c])) {
+        if (lastImages && lastImages[here])
+          images[here] = lastImages[here];
+        continue;
+      }
+      redrawn.push(here);
+      for (let obj of cell) {
+        const image = document.createElementNS(SVGNS, 'image');
+        image.setAttribute('x', c * IMAGE_SIZE);
+        image.setAttribute('y', r * IMAGE_SIZE);
+        image.setAttribute('width', IMAGE_SIZE);
+        image.setAttribute('height', IMAGE_SIZE);
+        // To avoid assuming case-sensitivity of the file system,
+        // we prefix uppercase strings with "text_".
+        if (obj === obj.toUpperCase())
+          obj = 'text_' + obj;
+        promises.push(new Promise((done) => {
+          image.onload = image.onerror = done;
+          image.setAttribute('href', obj + '.gif');
+        }));
+        if (!images[here]) images[here] = [];
+        images[here].push(image);
+        svg.appendChild(image);
+      }
+    }
+  }
+  // Safari requires SVG to be in document DOM for onload to trigger
+  svg.style.display = 'none';
+  document.body.appendChild(svg);
+  // Use new images only after loading all images,
+  // and only if this is still the current render.
+  Promise.all(promises).then(() => {
+    if (thisRender !== currentRender) return;
+    const output = document.getElementById('output');
+    if (currentSvg) {
+      // Clear old images at each redrawn location
+      if (lastImages) {
+        redrawn.forEach((location) => {
+          if (lastImages[location])
+            lastImages[location].forEach((image) => image.remove());
+        });
+      }
+      // Bring new images into visible svg
+      Object.values(images).forEach((imageList) => {
+        imageList.forEach((image) => {
+          currentSvg.appendChild(image);
+        });
+      });
+    } else {
+      // Display first SVG
+      currentSvg = svg;
+      currentRect = rect;
+      //output.innerHTML = '';
+      svg.style.display = 'block';
+      output.insertBefore(svg, document.getElementById('you_win'));
+    }
+    lastGrid = grid;
+    lastImages = images;
+    currentRect.setAttribute('width', width * IMAGE_SIZE);
+    currentRect.setAttribute('height', height * IMAGE_SIZE);
+    currentSvg.setAttribute('viewBox', `0 0 ${width * IMAGE_SIZE} ${height * IMAGE_SIZE}`);
+  });
+}
+
+var DIRECTIONS = {
+  'ArrowUp': 'up',
+  'W': 'up',
+  'K': 'up',
+
+  'ArrowDown': 'down',
+  'S': 'down',
+  'J': 'down',
+
+  'ArrowLeft': 'left',
+  'A': 'left',
+  'H': 'left',
+
+  'ArrowRight': 'right',
+  'D': 'right',
+  'L': 'right',
+}
+
+async function myFetch(loc, body){
+  try{
+    const response = await fetch(loc, {
+      method: 'POST',
+      cache: 'no-cache',
+      redirect: 'follow',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    if (response.ok) {
+      return await response.json();
+    } else {
+      return {error: await response.text()};
+    }
+  }catch(e){
+    return {error: await 'Could not communicate with the server.  Is it running?'}
+  }
+}
+
+function status(s, color){
+  var status = document.getElementById('status');
+  if (s) {
+    status.style.color = color;
+    status.innerHTML = s;
+  } else {
+    status.innerHTML = '';
+  }
+}
+
+function reload(initial) {
+  if (currentSvg){
+    currentSvg.remove();
+  }
+  lastGrid = lastImages = currentSvg = null;
+  var isUndo = typeof initial !== "undefined";
+  if (isUndo) {
+      var params = {'raw': JSON.stringify(initial)}
+  }else{
+      var full_level_name = document.getElementById('levels').value.split('/');
+      var params = {'directory': full_level_name[0], 'level': full_level_name.slice(1).join('/')}
+  }
+  win(false);
+  KEYPRESS_READY = false;
+  myFetch('/new_game', params)
+  .then((response) => {
+    KEYPRESS_READY = true;
+    //console.log(response);
+    if (response.error) {
+      return status(`<h2>Server error during <code>new_game</code>:</h2><pre>${response.error}</pre>`, "red");
+    }
+    if (!isUndo){
+        undoQueue = [response.board];
+    }
+    render(response.board);
+    status();
+  });
+}
+document.getElementById('reload').addEventListener('click', () => reload());
+
+function undo(){
+  if (undoQueue.length > 1) {
+      undoQueue.pop()
+  }
+  reload(undoQueue[undoQueue.length-1]);
+}
+document.getElementById('undo').addEventListener('click', undo);
+
+function startRawLevel(){
+    var rawlevel = document.getElementById('rawlevel').value;
+    try{
+        reload(JSON.parse(rawlevel));
+    }catch(e){
+        alert('invalid JSON level entered!  try again.')
+    }
+}
+document.getElementById('runraw').addEventListener('click', startRawLevel);
+document.getElementById('rawlevel').addEventListener('keydown', function(e){e.stopPropagation()});
+
+
+var KEYPRESS_READY = true;
+var GAME_OVER = false;
+function handle_keydown(e) {
+  // Don't override Ctrl-R, Ctrl-Shift-J, etc.
+  if (e.ctrlKey || e.altKey || e.metaKey) return;
+  let key = e.key;
+  if (key.length === 1)
+    key = key.toUpperCase();
+  //console.log('keydown', key);
+  if (key === "R" || key === 'r') { // reset
+    e.preventDefault();
+    if (!KEYPRESS_READY) return;
+    reload();
+  } else if (key === "Z" || key === 'z') {
+    e.preventDefault();
+    if (!KEYPRESS_READY) return;
+    undo();
+  } else if (DIRECTIONS.hasOwnProperty(key)) {
+    e.preventDefault();
+    if (!KEYPRESS_READY) return;
+    if (GAME_OVER) return;
+    KEYPRESS_READY = false; // no movement once the game is done;
+    myFetch('/step_game', {"direction": DIRECTIONS[key]})
+    .then(function(response){
+      KEYPRESS_READY = true;
+      if (response.error) {
+        return status(`<h2>Server error during <code>step_game</code>:</h2><pre>${response.error}</pre>`, "red");
+      } else if (response.victory) {
+        win(true);
+      }
+      if (JSON.stringify(response.board) != JSON.stringify(undoQueue[undoQueue.length - 1])){
+        undoQueue.push(response.board);
+      }
+      render(response.board);
+    });
+  }
+}
+
+function win(won) {
+  GAME_OVER = won;
+  if (won) {
+    document.getElementById('you_win').classList.add('show');
+  } else {
+    document.getElementById('you_win').classList.remove('show');
+  }
+}
+
+myFetch('/get_levels', {}).then(function(result){
+    var selector = document.getElementById('levels');
+    selector.addEventListener('change', () => reload());
+    for (var lvl of result){
+        var opt = document.createElement('option');
+        opt.value = lvl;
+        opt.innerText = lvl.replace(/\.(txt|json)$/, '');
+        if (lvl == 'puzzles/open.txt'){
+            opt.selected = true;
+        }
+        selector.append(opt);
+    }
+    document.getElementById('levelselect').style.visibility = 'visible';
+    reload();
+});
+document.addEventListener("keydown", handle_keydown);
+
+async function load_image(url) {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    await new Promise((done) => reader.onloadend = done);
+    return reader.result;
+}
+
+async function downloadSVG() {
+  const symbols = [];
+  const promises = [];
+  const urls = {};
+  let svg = currentSvg.outerHTML
+  .replace(/<svg/, '<svg xmlns="http://www.w3.org/2000/svg" version="2" style="background:black"')
+  .replace(/(<image[^<>]*)><\/image>/g, '$1/>')
+  .replace(/(<image[^<>]*href=")([^"]*)("[^<>]*>)/g, (match, left, url, right) => {
+    if (!urls[url]) {
+      urls[url] = true;
+      const promise = load_image(url)
+      .then((image) =>
+        symbols.push(
+          `<symbol id="${url}">${left}${image}${right}</symbol>`
+          .replace(/[xy]="[^"]*"\s*/g, ''))
+      );
+      promises.push(promise);
+    }
+    return `${left.replace(/^<image/, '<use')}#${url}${right}`;
+  });
+  await Promise.all(promises);
+  svg = svg.replace(/<svg[^<>]*>/, (match) => match + symbols.join(''));
+  const download = document.getElementById('download');
+  download.href = URL.createObjectURL(new Blob([svg], {type: 'image/svg+xml'}));
+  download.download = 'lab10.svg';
+  download.click();
+  download.href = '';
+}
+document.getElementById('downloadSVG').addEventListener('click', downloadSVG);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+[
+  [
+    [
+      [[], [], ["snek"], []],
+      [["ROCK"], [], ["rock"], ["FLAG"]],
+      [[], ["IS"], ["FLAG"], ["IS"]],
+      [["SNEK"], ["IS"], ["YOU"], ["WIN"]]
+    ],
+    false
+  ],
+  [
+    [
+      [[], ["snek"], [], []],
+      [["ROCK"], [], ["rock"], ["FLAG"]],
+      [[], ["IS"], ["FLAG"], ["IS"]],
+      [["SNEK"], ["IS"], ["YOU"], ["WIN"]]
+    ],
+    false
+  ],
+  [
+    [
+      [["snek"], [], [], []],
+      [["ROCK"], [], ["rock"], ["FLAG"]],
+      [[], ["IS"], ["FLAG"], ["IS"]],
+      [["SNEK"], ["IS"], ["YOU"], ["WIN"]]
+    ],
+    false
+  ],
+  [
+    [
+      [[], [], [], []],
+      [["snek"], [], ["flag"], ["FLAG"]],
+      [["ROCK"], ["IS"], ["FLAG"], ["IS"]],
+      [["SNEK"], ["IS"], ["YOU"], ["WIN"]]
+    ],
+    false
+  ],
+  [
+    [
+      [[], [], [], []],
+      [[], ["snek"], ["flag"], ["FLAG"]],
+      [["ROCK"], ["IS"], ["FLAG"], ["IS"]],
+      [["SNEK"], ["IS"], ["YOU"], ["WIN"]]
+    ],
+    false
+  ],
+  [
+    [
+      [[], [], [], []],
+      [[], [], ["flag", "snek"], ["FLAG"]],
+      [["ROCK"], ["IS"], ["FLAG"], ["IS"]],
+      [["SNEK"], ["IS"], ["YOU"], ["WIN"]]
+    ],
+    true
+  ]
+]

@@ -36,7 +36,6 @@ def mix(sound1, sound2, p):
     return new_sound
 
 def echo(sound, num_echos, delay, scale):
-    # raise NotImplementedError
     assert(num_echos >= 0)
     sample_delay = int(round(delay * sound['rate']))
     slen = len(sound['left'])
@@ -58,7 +57,6 @@ def echo(sound, num_echos, delay, scale):
     return new_sound
 
 def pan(sound):
-    # raise NotImplementedError
     new_sound = {}
     new_sound['rate'] = sound['rate']
     slen = len(sound['left'])

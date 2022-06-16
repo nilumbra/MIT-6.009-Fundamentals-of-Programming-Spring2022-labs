@@ -1,0 +1,6 @@
+right
+up
+up
+up
+left
+down

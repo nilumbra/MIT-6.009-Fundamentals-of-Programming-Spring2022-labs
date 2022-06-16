@@ -1,0 +1,1 @@
+lab.Div(lab.Var('y'), lab.Div(lab.Var('x'), lab.Var('z'))).eval({'x': -101, 'y': 665, 'z': -923})

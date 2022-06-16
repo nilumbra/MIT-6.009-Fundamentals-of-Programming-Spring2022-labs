@@ -1,0 +1,1 @@
+lab.Add(lab.Add(lab.Num(1), lab.Mul(lab.Mul(lab.Var('x'), lab.Var('y')), lab.Var('z'))), lab.Mul(lab.Var('z'), lab.Num(3)))

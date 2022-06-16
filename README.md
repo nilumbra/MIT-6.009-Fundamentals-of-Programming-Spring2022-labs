@@ -19,15 +19,14 @@ Other pages the reader may find useful are listed as follows: in corresponding l
 ## My use of this material
 To be completed...
 
-## Progress 
+## Progress Log
 - [x] Lab 1 Image processing
 - [x] Lab 2 Snekoban 
-- [ ] Lab 3 bacon number
+- [on] Lab 3 bacon number
 - [ ] Lab 4 frugal maps
 - [ ] Lab 5 minesweeper
 - [ ] Lab 6 SAT solver
-- [ ] Lab 7 autocorrect
-- [ ] Lab 8 symbolic algebra
+- [on] Lab 7 symbolic algebra(6/17~)
 - [ ] Lab 9 LISP I
 - [ ] Lab 10 LISP II
 - [ ] Lab' downloader
