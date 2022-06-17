@@ -6,3 +6,8 @@ Instead of explicitly checking the types of our objects and determining our beha
 Reference: https://blog.peterlamut.com/2018/11/04/python-attribute-lookup-explained-in-detail/
 
 and https://stackoverflow.com/questions/29565062/access-child-class-variables-in-parent-class
+
+
+
+### 7) Derivatives
+Even though it may not be obvious from looking at first glance, these mathematical definitions are recursive! That is to say, partial derivatives of compound expressions are defined in terms of partial derivatives of component parts, which may suggest strategies for implementing these rules in your program!
