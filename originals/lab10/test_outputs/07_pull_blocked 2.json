@@ -1,0 +1,46 @@
+[
+  [
+    [
+      [["SNEK"], ["IS"], ["YOU"], [], [], ["WALL"], ["IS"], ["STOP"]],
+      [["COMPUTER"], ["IS"], ["PULL"], [], [], ["wall"], [], []],
+      [[], [], [], [], [], ["wall"], [], []],
+      [[], [], [], ["computer"], ["computer"], ["wall"], ["snek"], []],
+      [[], [], [], [], [], ["wall"], [], []],
+      [[], ["computer"], ["computer"], ["computer"], ["snek"], [], [], []]
+    ],
+    false
+  ],
+  [
+    [
+      [["SNEK"], ["IS"], ["YOU"], [], [], ["WALL"], ["IS"], ["STOP"]],
+      [["COMPUTER"], ["IS"], ["PULL"], [], [], ["wall"], [], []],
+      [[], [], [], [], [], ["wall"], [], []],
+      [[], [], [], ["computer"], ["computer"], ["wall"], [], ["snek"]],
+      [[], [], [], [], [], ["wall"], [], []],
+      [[], [], ["computer"], ["computer"], ["computer"], ["snek"], [], []]
+    ],
+    false
+  ],
+  [
+    [
+      [["SNEK"], ["IS"], ["YOU"], [], [], ["WALL"], ["IS"], ["STOP"]],
+      [["COMPUTER"], ["IS"], ["PULL"], [], [], ["wall"], [], []],
+      [[], [], [], [], [], ["wall"], [], []],
+      [[], [], [], ["computer"], ["computer"], ["wall"], [], ["snek"]],
+      [[], [], [], [], [], ["wall"], [], []],
+      [[], [], [], ["computer"], ["computer"], ["computer"], ["snek"], []]
+    ],
+    false
+  ],
+  [
+    [
+      [["SNEK"], ["IS"], ["YOU"], [], [], ["WALL"], ["IS"], ["STOP"]],
+      [["COMPUTER"], ["IS"], ["PULL"], [], [], ["wall"], [], []],
+      [[], [], [], [], [], ["wall"], [], ["snek"]],
+      [[], [], [], ["computer"], ["computer"], ["wall"], [], []],
+      [[], [], [], [], [], ["wall"], ["snek"], []],
+      [[], [], [], ["computer"], ["computer"], ["computer"], [], []]
+    ],
+    false
+  ]
+]
