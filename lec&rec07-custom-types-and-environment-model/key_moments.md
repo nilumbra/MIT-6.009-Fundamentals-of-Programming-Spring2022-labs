@@ -11,3 +11,7 @@ and https://stackoverflow.com/questions/29565062/access-child-class-variables-in
 
 ### 7) Derivatives
 Even though it may not be obvious from looking at first glance, these mathematical definitions are recursive! That is to say, partial derivatives of compound expressions are defined in terms of partial derivatives of component parts, which may suggest strategies for implementing these rules in your program!
+
+
+### 8) Simplification
+- Implement additive/multiplicative identity in `BinOp` class. 
