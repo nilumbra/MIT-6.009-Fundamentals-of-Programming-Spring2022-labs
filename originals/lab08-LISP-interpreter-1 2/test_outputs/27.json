@@ -1,0 +1,14 @@
+[
+  {
+    "ok": true,
+    "output": 24
+  },
+  {
+    "ok": true,
+    "output": "SOMETHING"
+  },
+  {
+    "ok": true,
+    "output": -19.400000000000002
+  }
+]
