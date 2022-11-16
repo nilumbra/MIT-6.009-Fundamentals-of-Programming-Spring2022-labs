@@ -83,7 +83,41 @@ def tokenize(source):
         source (str): a string containing the source code of a Carlae
                       expression
     """
-    raise NotImplementedError
+
+    def moveTemp():
+        nonlocal tokens, temp
+        if len(temp):
+            tokens.append(''.join(temp))   
+            temp = []
+
+    tokens = []
+    temp = []
+    end = len(source)
+    i = 0
+
+    while i < end: 
+        if source[i] == '(':
+            moveTemp()
+            tokens.append(source[i])
+        elif source [i] == ')':
+            moveTemp()
+            tokens.append(source[i])
+        elif source[i] not in [' ', '\n']: 
+            if source [i] == '#':
+                moveTemp()
+                while i < end and source[i] != '\n': # skip the EOL/EOF if encounter #
+                    i += 1 # 
+                continue
+            else: # good charaters
+                temp.append(source[i])
+        else: # space \n, 'flush' temp
+            moveTemp()
+        i += 1            
+    
+            
+    moveTemp()
+    
+    return tokens
 
 
 def parse(tokens):
@@ -96,7 +130,45 @@ def parse(tokens):
     Arguments:
         tokens (list): a list of strings representing tokens
     """
-    raise NotImplementedError
+    def parse_expr(i):
+        """
+        Return (parsed_expression: List<String>, next_index: Integer)
+        """
+        nonlocal end, open
+        expr = []
+
+        # if i == end - 1: # if single token, e.g. ['2']
+        #     return tokens[i] 
+
+        while i < end:
+            if tokens[i] == '(': # start read an S-expression
+                open += 1
+                parsed_expr, i = parse_expr(i+1) # start parsing from next token
+                expr.append(parsed_expr)
+            elif tokens[i] == ')': # end of curret S-expression
+                open -= 1
+                return expr, i
+            else: # if is atomic expression
+                if tokens[i] in ['function', ':=']:
+                    if i - 1 < 0 or tokens[i - 1] != '(':
+                        raise CarlaeSyntaxError("Malformed S-expression: special form S-expressions expect an open parenthesis before keywords!!")
+            
+                expr.append(number_or_symbol(tokens[i]))
+            
+            i+=1
+        
+        # assert i == end, f'Expect i == {end}, but i == {i}'
+
+        return expr[0] if len(expr) == 1 else expr, end  # when this state is reach, i should always be <end>
+
+    
+    end = len(tokens)
+    open = 0
+
+    parsed, i = parse_expr(0)
+    if open != 0:
+        raise CarlaeSyntaxError('Parenthesis mismatch!')
+    return parsed
 
 
 ######################
