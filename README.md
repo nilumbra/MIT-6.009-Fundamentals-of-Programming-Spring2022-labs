@@ -27,7 +27,7 @@ To be completed...
 - [ ] Lab 5 downloader
 - [ ] Lab 6 SAT solver
 - [x] Lab 7 symbolic algebra
-- [ ] Lab 8 LISP I
+- [x] Lab 8 LISP I
 - [ ] Lab 9 LISP II
 - [ ] Lab 10 snek is you 
 
