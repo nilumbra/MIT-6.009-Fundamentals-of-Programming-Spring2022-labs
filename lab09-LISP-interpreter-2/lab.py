@@ -21,6 +21,7 @@ from functools import reduce
 
 
 class CarlaeError(Exception):
+<<<<<<< HEAD
   """
   A type of exception to be raised if there is an error with a Carlae
   program.  Should never be raised directly; rather, subclasses should be
@@ -53,6 +54,40 @@ class CarlaeEvaluationError(CarlaeError):
   """
 
   pass
+=======
+    """
+    A type of exception to be raised if there is an error with a Carlae
+    program.  Should never be raised directly; rather, subclasses should be
+    raised.
+    """
+
+    pass
+
+
+class CarlaeSyntaxError(CarlaeError):
+    """
+    Exception to be raised when trying to evaluate a malformed expression.
+    """
+
+    pass
+
+
+class CarlaeNameError(CarlaeError):
+    """
+    Exception to be raised when looking up a name that has not been defined.
+    """
+
+    pass
+
+
+class CarlaeEvaluationError(CarlaeError):
+    """
+    Exception to be raised if there is an error during evaluation other than a
+    CarlaeNameError.
+    """
+
+    pass
+>>>>>>> 1012d7087b2b764c9e7d4ac86a56352c4992a728
 
 ############################
 #       Environment        #
